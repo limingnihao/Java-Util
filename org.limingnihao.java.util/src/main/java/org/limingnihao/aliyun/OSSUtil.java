@@ -1,0 +1,246 @@
+package org.limingnihao.aliyun;
+
+import com.aliyun.oss.*;
+import com.aliyun.oss.common.utils.DateUtil;
+import com.aliyun.oss.model.*;
+import org.apache.geronimo.mail.util.Base64Encoder;
+import org.junit.Test;
+import org.limingnihao.util.FileUtil;
+import org.limingnihao.util.HTTPUtil;
+import org.limingnihao.util.IOUtil;
+import org.limingnihao.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.misc.BASE64Encoder;
+
+import java.io.*;
+import java.net.URL;
+import java.text.ParseException;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+
+/**
+ * 阿里云文件操作
+ */
+public class OSSUtil {
+
+     private static final Logger logger = LoggerFactory.getLogger(OSSUtil.class);
+
+    private String shanghaiEndpoint = "oss-cn-shanghai.aliyuncs.com";
+    private String beijingEndpoint = "oss-cn-beijing.aliyuncs.com";
+    private String endpoint = "oss-cn-beijing.aliyuncs.com";
+    private String accessKeyId;
+    private String accessKeySecret;
+    private String bucketName = "dhcc-activity";
+    private OSSClient client = null;
+
+    private static final String PUBLICBUCKETNAME = "dhcc-activity";
+    private static final String PRIVATEBUCKETNAME = "dhcfcs";
+
+//    public OSSUtil(){
+//
+//    }
+
+    public OSSUtil(String accessKeyId, String accessKeySecret){
+        this.accessKeyId = accessKeyId;
+        this.accessKeySecret = accessKeySecret;
+    }
+
+//    public OSSUtil(String bucketName){
+//        this.bucketName = bucketName;
+//    }
+
+    /**
+     * 链接
+     */
+    public void connect(){
+        this.client = new OSSClient("https://" + endpoint, accessKeyId, accessKeySecret);
+        client.getClientConfiguration().setMaxConnections(100);
+        client.getClientConfiguration().setConnectionTimeout(5000);
+        client.getClientConfiguration().setMaxErrorRetry(3);
+        client.getClientConfiguration().setSocketTimeout(2000);
+    }
+
+    /**
+     * 链接
+     */
+    public void connectShanghai(){
+        endpoint = shanghaiEndpoint;
+        connect();
+    }
+
+    /**
+     * 链接
+     */
+    public void connectBeijing(){
+        endpoint = beijingEndpoint;
+        connect();
+    }
+
+    /**
+     * 断开
+     */
+    public void shutdown(){
+        client.shutdown();
+    }
+
+    public void list(){
+        ObjectListing objectListing = client.listObjects(new ListObjectsRequest(bucketName));
+        for (OSSObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+            System.out.println(" - " + objectSummary.getKey() + "  " +  "(size = " + objectSummary.getSize() + ")");
+        }
+
+    }
+
+    private String createFile(String key, String filePath)  throws Exception{
+        return createFile(key, filePath, null);
+    }
+
+    private String createFile(String key, String filePath, String dns) throws Exception {
+        logger.info("createFile - key=" + key + ", filePath=" + filePath + ", dns=" + dns);
+        if(FileUtil.isExists(filePath)){
+            PutObjectResult result = client.putObject(bucketName, key, new File(filePath));
+            if(StringUtil.isNotBlank(dns)){
+                return dns + "/" + key;
+            }
+            else{
+                return "http://" + bucketName + "." + endpoint + "/" + key;
+            }
+        }
+        throw new FileNotFoundException("文件不存在!");
+    }
+
+    private String createFile(String key, InputStream is){
+        return createFile(key, is, null);
+    }
+
+    private String createFile(String key, InputStream is, String dns){
+        PutObjectResult result = client.putObject(bucketName, key, is);
+        if(StringUtil.isNotBlank(dns)){
+            return dns + "/" + key;
+        }
+        else{
+            return "http://" + bucketName + "." + endpoint + "/" + key;
+        }
+    }
+
+    private boolean createFolder(String folder){
+        try{
+            PutObjectResult result = client.putObject(bucketName, folder + "/", new ByteArrayInputStream(new byte[0]));
+            logger.info("createFolder - folder=" + folder + ", " + result.toString());
+            return true;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * ----------------------------------- new --------------------------------------------
+     */
+
+    public String createPublicFile(String key, String filePath)  throws Exception{
+        bucketName = PUBLICBUCKETNAME;
+        endpoint = beijingEndpoint;
+        return createPublicFile(key, filePath, null);
+    }
+
+    public String createPrivateFile(String key, String filePath)  throws Exception{
+        bucketName = PRIVATEBUCKETNAME;
+        endpoint = shanghaiEndpoint;
+        return createPrivateFile(key, filePath, null);
+    }
+
+    public String createPublicFile(String key, String filePath, String dns) throws Exception {
+        bucketName = PUBLICBUCKETNAME;
+        endpoint = beijingEndpoint;
+        return createFile(key, filePath, dns);
+    }
+
+    public String createPrivateFile(String key, String filePath, String dns) throws Exception {
+        bucketName = PRIVATEBUCKETNAME;
+        endpoint = shanghaiEndpoint;
+        return createFile(key, filePath, dns);
+    }
+
+    public String createPublicFile(String key, InputStream is){
+        bucketName = PUBLICBUCKETNAME;
+        endpoint = beijingEndpoint;
+        return createFile(key, is, null);
+    }
+
+    public String createPrivateFile(String key, InputStream is){
+        bucketName = PRIVATEBUCKETNAME;
+        endpoint = shanghaiEndpoint;
+        return createFile(key, is, null);
+    }
+
+    public String createPublicFile(String key, InputStream is, String dns){
+        bucketName = PUBLICBUCKETNAME;
+        endpoint = beijingEndpoint;
+        return createFile(key, is, dns);
+    }
+
+    public String createPrivateFile(String key, InputStream is, String dns){
+        bucketName = PRIVATEBUCKETNAME;
+        endpoint = shanghaiEndpoint;
+        return createFile(key, is, dns);
+    }
+
+    public boolean createPublicFolder(String folder){
+        bucketName = PUBLICBUCKETNAME;
+        endpoint = beijingEndpoint;
+        return createFolder(folder);
+    }
+
+    public boolean createPrivateFolder(String folder){
+        bucketName = PRIVATEBUCKETNAME;
+        endpoint = shanghaiEndpoint;
+        return createFolder(folder);
+    }
+
+    /**
+     * 获取文件相关
+     */
+    public InputStream getPrivateObjectInputStream(String key) throws ParseException, IOException {
+        bucketName = PRIVATEBUCKETNAME;
+        endpoint = shanghaiEndpoint;
+
+        //服务器端生成url签名字串
+        Date expiration = DateUtil.parseRfc822Date("Wed, 18 Mar 2099 14:20:00 GMT");
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, key, HttpMethod.GET);
+        //设置过期时间
+        request.setExpiration(expiration);
+        // 生成URL签名(HTTP GET请求)
+        URL signedUrl = client.generatePresignedUrl(request);
+        System.out.println("signed url for getObject: " + signedUrl);
+
+        return signedUrl.openStream();
+    }
+
+    public static void main(String agrs[]){
+        OSSUtil oss = new OSSUtil("a","b");
+        oss.connect();
+//        oss.createFolder("asdfa/adfasdf");
+        try{
+//            String s = oss.createFile("goods/1.jpg", "/Users/lishiming/Pictures/算盘.jpg", "http://img-activity.kjrd.com.cn/");
+//            System.out.println("" + s);
+            InputStream is = oss.getPrivateObjectInputStream("pension/2016-06-13/bg1.png");
+
+            BASE64Encoder encoder = new BASE64Encoder();
+            String base64str = encoder.encode(IOUtil.InputStreamToByte(is));
+            File file = new File("D://abc.png");
+            FileOutputStream fos = new FileOutputStream(file);
+            byte[] bytes = new byte[1000];
+            int i = 0;
+            while(i != -1){
+                is.read(bytes);
+                fos.write(bytes);
+            }
+//            System.out.println(o.getKey());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+}
