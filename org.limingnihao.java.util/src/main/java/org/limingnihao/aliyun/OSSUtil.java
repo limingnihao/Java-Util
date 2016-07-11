@@ -24,18 +24,18 @@ import java.util.concurrent.ExecutionException;
  */
 public class OSSUtil {
 
-     private static final Logger logger = LoggerFactory.getLogger(OSSUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(OSSUtil.class);
 
     private String shanghaiEndpoint = "oss-cn-shanghai.aliyuncs.com";
     private String beijingEndpoint = "oss-cn-beijing.aliyuncs.com";
     private String endpoint = "oss-cn-beijing.aliyuncs.com";
     private String accessKeyId;
     private String accessKeySecret;
-    private String bucketName = "dhcc-activity";
+    private String bucketName = "";
     private OSSClient client = null;
 
-    private static final String PUBLICBUCKETNAME = "dhcc-activity";
-    private static final String PRIVATEBUCKETNAME = "dhcfcs";
+    private static final String PUBLICBUCKETNAME = "";
+    private static final String PRIVATEBUCKETNAME = "";
 
 //    public OSSUtil(){
 //
