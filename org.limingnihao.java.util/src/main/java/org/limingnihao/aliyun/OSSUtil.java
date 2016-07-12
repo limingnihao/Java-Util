@@ -34,21 +34,10 @@ public class OSSUtil {
     private String bucketName = "";
     private OSSClient client = null;
 
-    private static final String PUBLICBUCKETNAME = "";
-    private static final String PRIVATEBUCKETNAME = "";
-
-//    public OSSUtil(){
-//
-//    }
-
     public OSSUtil(String accessKeyId, String accessKeySecret){
         this.accessKeyId = accessKeyId;
         this.accessKeySecret = accessKeySecret;
     }
-
-//    public OSSUtil(String bucketName){
-//        this.bucketName = bucketName;
-//    }
 
     /**
      * 链接
@@ -139,62 +128,62 @@ public class OSSUtil {
      * ----------------------------------- new --------------------------------------------
      */
 
-    public String createPublicFile(String key, String filePath)  throws Exception{
-        bucketName = PUBLICBUCKETNAME;
+    public String createPublicFile(String bucket, String key, String filePath)  throws Exception{
+        bucketName = bucket;
         endpoint = beijingEndpoint;
-        return createPublicFile(key, filePath, null);
+        return createPublicFile(bucketName, key, filePath, null);
     }
 
-    public String createPrivateFile(String key, String filePath)  throws Exception{
-        bucketName = PRIVATEBUCKETNAME;
+    public String createPrivateFile(String bucket, String key, String filePath)  throws Exception{
+        bucketName = bucket;
         endpoint = shanghaiEndpoint;
-        return createPrivateFile(key, filePath, null);
+        return createPrivateFile(bucketName, key, filePath, null);
     }
 
-    public String createPublicFile(String key, String filePath, String dns) throws Exception {
-        bucketName = PUBLICBUCKETNAME;
+    public String createPublicFile(String bucket, String key, String filePath, String dns) throws Exception {
+        bucketName = bucket;
         endpoint = beijingEndpoint;
         return createFile(key, filePath, dns);
     }
 
-    public String createPrivateFile(String key, String filePath, String dns) throws Exception {
-        bucketName = PRIVATEBUCKETNAME;
+    public String createPrivateFile(String bucket, String key, String filePath, String dns) throws Exception {
+        bucketName = bucket;
         endpoint = shanghaiEndpoint;
         return createFile(key, filePath, dns);
     }
 
-    public String createPublicFile(String key, InputStream is){
-        bucketName = PUBLICBUCKETNAME;
+    public String createPublicFile(String bucket, String key, InputStream is){
+        bucketName = bucket;
         endpoint = beijingEndpoint;
         return createFile(key, is, null);
     }
 
-    public String createPrivateFile(String key, InputStream is){
-        bucketName = PRIVATEBUCKETNAME;
+    public String createPrivateFile(String bucket, String key, InputStream is){
+        bucketName = bucket;
         endpoint = shanghaiEndpoint;
         return createFile(key, is, null);
     }
 
-    public String createPublicFile(String key, InputStream is, String dns){
-        bucketName = PUBLICBUCKETNAME;
+    public String createPublicFile(String bucket, String key, InputStream is, String dns){
+        bucketName = bucket;
         endpoint = beijingEndpoint;
         return createFile(key, is, dns);
     }
 
-    public String createPrivateFile(String key, InputStream is, String dns){
-        bucketName = PRIVATEBUCKETNAME;
+    public String createPrivateFile(String bucket, String key, InputStream is, String dns){
+        bucketName = bucket;
         endpoint = shanghaiEndpoint;
         return createFile(key, is, dns);
     }
 
-    public boolean createPublicFolder(String folder){
-        bucketName = PUBLICBUCKETNAME;
+    public boolean createPublicFolder(String bucket, String folder){
+        bucketName = bucket;
         endpoint = beijingEndpoint;
         return createFolder(folder);
     }
 
-    public boolean createPrivateFolder(String folder){
-        bucketName = PRIVATEBUCKETNAME;
+    public boolean createPrivateFolder(String bucket, String folder){
+        bucketName = bucket;
         endpoint = shanghaiEndpoint;
         return createFolder(folder);
     }
@@ -202,8 +191,8 @@ public class OSSUtil {
     /**
      * 获取文件相关
      */
-    public InputStream getPrivateObjectInputStream(String key) throws ParseException, IOException {
-        bucketName = PRIVATEBUCKETNAME;
+    public InputStream getPrivateObjectInputStream(String bucket, String key) throws ParseException, IOException {
+        bucketName = bucket;
         endpoint = shanghaiEndpoint;
 
         //服务器端生成url签名字串
@@ -216,31 +205,6 @@ public class OSSUtil {
         System.out.println("signed url for getObject: " + signedUrl);
 
         return signedUrl.openStream();
-    }
-
-    public static void main(String agrs[]){
-        OSSUtil oss = new OSSUtil("a","b");
-        oss.connect();
-//        oss.createFolder("asdfa/adfasdf");
-        try{
-//            String s = oss.createFile("goods/1.jpg", "/Users/lishiming/Pictures/算盘.jpg", "http://img-activity.kjrd.com.cn/");
-//            System.out.println("" + s);
-            InputStream is = oss.getPrivateObjectInputStream("pension/2016-06-13/bg1.png");
-
-            BASE64Encoder encoder = new BASE64Encoder();
-            String base64str = encoder.encode(IOUtil.InputStreamToByte(is));
-            File file = new File("D://abc.png");
-            FileOutputStream fos = new FileOutputStream(file);
-            byte[] bytes = new byte[1000];
-            int i = 0;
-            while(i != -1){
-                is.read(bytes);
-                fos.write(bytes);
-            }
-//            System.out.println(o.getKey());
-        }catch(Exception e){
-            e.printStackTrace();
-        }
     }
 
 }
