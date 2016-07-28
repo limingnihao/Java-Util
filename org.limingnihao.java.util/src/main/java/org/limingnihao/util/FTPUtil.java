@@ -22,7 +22,10 @@ public class FTPUtil {
     private FTPClient ftp;
 
     public static void main(String args[]){
+        FTPUtil util = new FTPUtil();
+        util.login("101.201.105.103", 21, "dhcc", "Dhcc2015-2016");
     }
+
 
     public FTPUtil() {
     }

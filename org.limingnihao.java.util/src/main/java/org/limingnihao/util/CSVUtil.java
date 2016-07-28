@@ -47,9 +47,9 @@ public class CSVUtil {
      * @param fileName - 保存文件名
      * @return
      */
-    public static long saveListToCsvFile(Object[] dataList, String dirPath, String fileName) {
+    public static long saveListToCsvFile(Object[] dataList, String dirPath, String fileName, String accessToken) {
 
-        String dateString = CSVUtil.listToCSV(dataList);
+        String dateString = CSVUtil.listToCSV(dataList, accessToken);
         //路径
         File dir = new File(dirPath);
         boolean mkResult = true;
@@ -69,10 +69,6 @@ public class CSVUtil {
         try {
             file.createNewFile();
             out = new FileOutputStream(file);
-            int pageSize = 100000;
-            for(int i=0; i<dataList.length; i+=100000){
-
-            }
             byte[] dates = dateString.getBytes("UTF-8");
             out.write(dates);
             out.flush();
@@ -92,12 +88,12 @@ public class CSVUtil {
         }
     }
 
-    public static String listToCSV(Object[] list){
+    public static String listToCSV(Object[] list, String accessToken){
         StringBuffer dateString = new StringBuffer();
         if(list != null && list.length > 0){
             dateString.append(objectToCSVByFieldName(list[0]) + "\n");
             for(Object obj : list){
-                dateString.append(objectToCSV(obj) + "\n");
+                dateString.append(objectToCSV(obj, accessToken) + "\n");
             }
         }
         return dateString.toString();
@@ -122,7 +118,7 @@ public class CSVUtil {
         }
     }
 
-    public static String objectToCSV(Object targetObj) {
+    public static String objectToCSV(Object targetObj, String accessToken) {
         StringBuffer dateString = new StringBuffer();
         try {
             for (Field field : targetObj.getClass().getDeclaredFields()) {
@@ -140,7 +136,11 @@ public class CSVUtil {
                 else if(value != null) {
                     valueString = value.toString();
                 }
-                dateString.append("\"" + valueString + "\"" + ",");
+                if(StringUtil.isBlank(accessToken)){
+                    dateString.append("\"" + valueString + "\"" + ",");
+                }else{
+                    dateString.append("\"" + CryptAESUtil.AES_Encrypt(accessToken, valueString) + "\"" + ",");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
