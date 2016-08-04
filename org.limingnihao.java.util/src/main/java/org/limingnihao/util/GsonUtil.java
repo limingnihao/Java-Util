@@ -2,6 +2,7 @@ package org.limingnihao.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
@@ -22,7 +23,12 @@ public class GsonUtil {
 		if (json == null || json.equals("") || json.equals("null")) {
 			return null;
 		}
-		return GSON.fromJson(json, clazz);
+		try{
+			return GSON.fromJson(json, clazz);
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public static String toJson(Object src) {
@@ -40,12 +46,17 @@ public class GsonUtil {
      * @return
      */
     public static String getValue(String json, String key){
-        List<Map<String,String>> list= GSON.fromJson(json,new TypeToken<List<Map<String,String>>>() { }.getType());
-        for(Map<String,String> map : list){
-            if(map.containsKey(key)){
-                return map.get(key);
-            }
-        }
+    	try{
+			List<Map<String,String>> list= GSON.fromJson(json,new TypeToken<List<Map<String,String>>>() { }.getType());
+			for(Map<String,String> map : list){
+				if(map.containsKey(key)){
+					return map.get(key);
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
         return null;
     }
 
