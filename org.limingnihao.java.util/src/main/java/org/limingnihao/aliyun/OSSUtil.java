@@ -207,4 +207,18 @@ public class OSSUtil {
         return signedUrl.openStream();
     }
 
+    public URL getPrivateObjectURL(String bucket, String key) throws ParseException {
+        bucketName = bucket;
+        endpoint = shanghaiEndpoint;
+
+        //服务器端生成url签名字串
+        Date expiration = DateUtil.parseRfc822Date("Wed, 18 Mar 2099 14:20:00 GMT");
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, key, HttpMethod.GET);
+        //设置过期时间
+        request.setExpiration(expiration);
+        // 生成URL签名(HTTP GET请求)
+        URL signedUrl = client.generatePresignedUrl(request);
+        return signedUrl;
+    }
+
 }
