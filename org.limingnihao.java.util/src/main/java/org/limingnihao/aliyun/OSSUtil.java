@@ -3,11 +3,7 @@ package org.limingnihao.aliyun;
 import com.aliyun.oss.*;
 import com.aliyun.oss.common.utils.DateUtil;
 import com.aliyun.oss.model.*;
-import org.apache.geronimo.mail.util.Base64Encoder;
-import org.junit.Test;
 import org.limingnihao.util.FileUtil;
-import org.limingnihao.util.HTTPUtil;
-import org.limingnihao.util.IOUtil;
 import org.limingnihao.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,6 +201,20 @@ public class OSSUtil {
         System.out.println("signed url for getObject: " + signedUrl);
 
         return signedUrl.openStream();
+    }
+
+    public URL getPrivateObjectURL(String bucket, String key) throws ParseException {
+        bucketName = bucket;
+        endpoint = shanghaiEndpoint;
+
+        //服务器端生成url签名字串
+        Date expiration = DateUtil.parseRfc822Date("Wed, 18 Mar 2099 14:20:00 GMT");
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, key, HttpMethod.GET);
+        //设置过期时间
+        request.setExpiration(expiration);
+        // 生成URL签名(HTTP GET请求)
+        URL signedUrl = client.generatePresignedUrl(request);
+        return signedUrl;
     }
 
 }

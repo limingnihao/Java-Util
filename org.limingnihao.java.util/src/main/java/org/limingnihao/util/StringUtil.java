@@ -1,12 +1,17 @@
 package org.limingnihao.util;
 
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sourceforge.jeval.Evaluator;
 import org.apache.commons.lang.StringUtils;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.context.Context;
 
 /**
  * String常用方法
@@ -167,6 +172,31 @@ public class StringUtil {
         Matcher m = p.matcher(str);
         return m.matches();
     }
+
+
+	/**
+	 * 根据公式计算结果
+	 * @param expression
+	 * @param value
+	 * @return
+	 */
+    public static double calculator(String expression, String[] value){
+		try {
+			Context context  = new VelocityContext();
+			for(int i=0; i<value.length; i++){
+				context.put("a" + i, value[i]);
+			}
+			StringWriter sw = new StringWriter();
+			Velocity.evaluate(context, sw, "velocity", expression);
+			Evaluator eval = new Evaluator();
+			String result = eval.evaluate(sw.toString());
+			double r= NumberUtil.getDoubleScale(NumberUtil.parseDouble(result), 2);
+			return r;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
 
 	public static void main(String[] args) {
 //		System.out.println(unicodeConvert("\\u627F\\u5FB7"));
