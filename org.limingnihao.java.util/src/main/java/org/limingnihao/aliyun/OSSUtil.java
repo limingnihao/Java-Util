@@ -1,19 +1,27 @@
 package org.limingnihao.aliyun;
 
-import com.aliyun.oss.*;
-import com.aliyun.oss.common.utils.DateUtil;
-import com.aliyun.oss.model.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.text.ParseException;
+import java.util.Date;
+
 import org.limingnihao.util.FileUtil;
 import org.limingnihao.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.BASE64Encoder;
 
-import java.io.*;
-import java.net.URL;
-import java.text.ParseException;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
+import com.aliyun.oss.HttpMethod;
+import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.common.utils.DateUtil;
+import com.aliyun.oss.model.GeneratePresignedUrlRequest;
+import com.aliyun.oss.model.ListObjectsRequest;
+import com.aliyun.oss.model.OSSObjectSummary;
+import com.aliyun.oss.model.ObjectListing;
+import com.aliyun.oss.model.PutObjectResult;
 
 /**
  * 阿里云文件操作

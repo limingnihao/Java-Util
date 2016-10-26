@@ -1,16 +1,21 @@
 package org.limingnihao.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import org.limingnihao.model.FileBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * ftp常用方法
@@ -51,7 +56,7 @@ public class FTPUtil {
             this.ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
             this.ftp.enterLocalPassiveMode();
 
-            logger.info("login - url=" + url + ":" + port + ", username=" + username + ", password=" + password + ", replyCode=" + replyCode + ", isPositiveCompletion=" + FTPReply.isPositiveCompletion(replyCode) +
+            logger.info("login - url=" + url + ":" + port + ", username=" + username + ", password=" + password + ", login=" + login + ", replyCode=" + replyCode + ", isPositiveCompletion=" + FTPReply.isPositiveCompletion(replyCode) +
                     ", names=" + Arrays.toString(this.ftp.listNames()));
             if (!FTPReply.isPositiveCompletion(replyCode)) {
                 this.ftp.disconnect();
@@ -225,7 +230,6 @@ public class FTPUtil {
         if (!this.ftp.isConnected()) {
             return null;
         }
-        List<FileBean> list = new ArrayList<FileBean>();
         try {
             FTPFile[] files = this.ftp.listFiles(ftpPath);
             for (FTPFile f : files) {

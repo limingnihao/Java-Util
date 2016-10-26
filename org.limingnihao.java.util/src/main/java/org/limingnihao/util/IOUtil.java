@@ -1,10 +1,10 @@
 package org.limingnihao.util;
 
-import sun.misc.BASE64Encoder;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import sun.misc.BASE64Encoder;
 
 /**
  * Created by Ran on 2016/6/13.

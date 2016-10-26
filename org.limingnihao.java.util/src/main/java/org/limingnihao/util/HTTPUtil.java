@@ -1,12 +1,31 @@
 package org.limingnihao.util;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
@@ -16,13 +35,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.*;
 
 public class HTTPUtil {
 
@@ -48,7 +60,7 @@ public class HTTPUtil {
                 .setCircularRedirectsAllowed(true)
                 .setRedirectsEnabled(true)
                 .setRelativeRedirectsAllowed(true)
-                .setStaleConnectionCheckEnabled(true)
+//                .setStaleConnectionCheckEnabled(true)
                 .setSocketTimeout(120000)
                 .setConnectTimeout(120000)
                 .setConnectionRequestTimeout(120000)
@@ -106,6 +118,56 @@ public class HTTPUtil {
             postMethod.releaseConnection();
         }
         return null;
+    }
+
+    /**
+     * 使用apache的httpapi请求post
+     */
+    public static String sendApachePostRequest(String url, Map<String, String> params) {
+        String response = null;
+        HttpClient httpClient = new HttpClient();
+        PostMethod postMethod = new PostMethod(url);
+
+        try {
+            //构造键值对参数
+            List<NameValuePair> partList = new ArrayList<NameValuePair>();
+            if (params != null && params.size() > 0) {
+                Iterator<String> it = params.keySet().iterator();
+                while (it.hasNext()) {
+                    String key = (String) it.next();
+                    String value = params.get(key);
+                    partList.add(new NameValuePair(key, value));
+                }
+            }
+            NameValuePair[] data = new NameValuePair[partList.size()];
+            for(int i=0; i<partList.size(); i++){
+                data[i] = partList.get(i);
+            }
+            postMethod.setRequestBody(data);
+            postMethod.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8");
+//            postMethod.setRequestEntity(new MultipartRequestEntity(parts, postMethod.getParams()));
+            httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(HTTPUtil.TIME_OUT_HTTP);
+            httpClient.executeMethod(postMethod);
+            if (postMethod.getStatusCode() == HttpStatus.SC_OK) {
+                InputStream inputStream = postMethod.getResponseBodyAsStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+                StringBuffer stringBuffer = new StringBuffer();
+                String str = "";
+                while ((str = br.readLine()) != null) {
+                    stringBuffer.append(str);
+                }
+                response = stringBuffer.toString();
+                return response;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            logger.info("http请求失败， url=" + url + ", e=" + e.getMessage());
+            e.printStackTrace();
+            return null;
+        } finally {
+            postMethod.releaseConnection();
+        }
     }
 
     /**
@@ -221,51 +283,7 @@ public class HTTPUtil {
         return result;
     }
 
-    /**
-     * 使用apache的httpapi请求post
-     */
-    public static String sendApachePostRequest(String url, Map<String, String> params) {
-        String response = null;
-        HttpClient httpClient = new HttpClient();
-        PostMethod postMethod = new PostMethod(url);
-        try {
-            List<StringPart> partList = new ArrayList<StringPart>();
-            if (params != null && params.size() > 0) {
-                Iterator<String> it = params.keySet().iterator();
-                while (it.hasNext()) {
-                    String key = (String) it.next();
-                    String value = params.get(key);
-                    partList.add(new StringPart(key, value));
-                }
-            }
-            Part[] parts = new Part[partList.size()];
-            for (int i = 0; i < partList.size(); i++) {
-                parts[i] = partList.get(i);
-            }
-            postMethod.setRequestEntity(new MultipartRequestEntity(parts, postMethod.getParams()));
-            httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(HTTPUtil.TIME_OUT_HTTP);
-            httpClient.executeMethod(postMethod);
-            if (postMethod.getStatusCode() == HttpStatus.SC_OK) {
-                InputStream inputStream = postMethod.getResponseBodyAsStream();
-                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-                StringBuffer stringBuffer = new StringBuffer();
-                String str = "";
-                while ((str = br.readLine()) != null) {
-                    stringBuffer.append(str);
-                }
-                response = stringBuffer.toString();
-                return response;
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            logger.info("http请求失败， url=" + url + ", e=" + e.getMessage());
-            e.printStackTrace();
-            return null;
-        } finally {
-            postMethod.releaseConnection();
-        }
-    }
+
 
     public static String doBodyPost(String url,String body) throws ClientProtocolException, IOException
     {
@@ -314,4 +332,15 @@ public class HTTPUtil {
         return serverAddress;
     }
 
+
+    public static void main(String args[]){
+        String p = "f0d8f6c4810e9034";
+
+        String pa = "{\"name\":\"jason\",\"contact\":\"18622745166\",\"identity\":\"411303198802285933\",\"operateUserId\":0,\"operateSiteId\":0}";
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("params", CryptAESUtil.encrypt(p, pa));
+        map.put("accessToken", p);
+        String r = HTTPUtil.sendApachePostRequest("http://localhost:13100/interface/customer/register/create.do", map);
+        System.out.println(r);
+    }
 }

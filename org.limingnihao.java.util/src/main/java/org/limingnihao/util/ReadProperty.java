@@ -1,7 +1,7 @@
 package org.limingnihao.util;
 
+import java.io.InputStream;
 import java.util.Properties;
-import java.io.*;
 
 public class ReadProperty {
 	private static Object initLock = new Object();

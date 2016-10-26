@@ -1,15 +1,13 @@
 package org.limingnihao.util;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.QuoteMode;
-import org.limingnihao.model.FileBean;
 import org.limingnihao.model.SortBean;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 使用Commons csv生成文件

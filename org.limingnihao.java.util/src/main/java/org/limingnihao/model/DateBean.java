@@ -1,5 +1,7 @@
 package org.limingnihao.model;
 
+import org.limingnihao.util.DateUtil;
+
 import java.util.Date;
 
 public class DateBean {
@@ -15,8 +17,25 @@ public class DateBean {
 	private String weekName;
 	private Date date;
 
+	@Override
 	public String toString() {
-		return "DateBean - year=" + year + ", month=" + month + ", day=" + day + ", hour=" + hour + ", minute=" + minute + ", second=" + second + ", week=" + week + ", weekName=" + weekName;
+		return "DateBean{" +
+				"id=" + id +
+				", state=" + state +
+				", year=" + year +
+				", month=" + month +
+				", day=" + day +
+				", hour=" + hour +
+				", minute=" + minute +
+				", second=" + second +
+				", week=" + week +
+				", weekName='" + weekName + '\'' +
+				", date=" + date +
+				'}';
+	}
+
+	public String getString(){
+		return DateUtil.format(this.date);
 	}
 
 	public int getId() {

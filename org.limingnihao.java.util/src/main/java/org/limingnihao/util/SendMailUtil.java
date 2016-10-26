@@ -1,11 +1,12 @@
 package org.limingnihao.util;
 
+import java.util.Properties;
+
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Properties;
 
 /**
  * Created by 唐溶波 on 16/3/4.

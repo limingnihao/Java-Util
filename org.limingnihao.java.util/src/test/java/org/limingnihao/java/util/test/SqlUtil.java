@@ -1,12 +1,11 @@
 package org.limingnihao.java.util.test;
 
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.ArrayList;
+
 import org.limingnihao.util.ExcelUtil;
 import org.limingnihao.util.MySqlUtil;
 import org.limingnihao.util.NumberUtil;
-
-import java.util.ArrayList;
 
 /**
  * Created by lishiming on 16/7/25.

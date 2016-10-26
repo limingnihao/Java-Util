@@ -1,10 +1,5 @@
 package org.limingnihao.util;
 
-import org.limingnihao.model.DateBean;
-import org.limingnihao.model.DateScopeBean;
-import org.limingnihao.model.WeekBean;
-import org.limingnihao.type.DateFastParamType;
-
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,6 +7,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import org.limingnihao.model.DateBean;
+import org.limingnihao.model.DateScopeBean;
+import org.limingnihao.model.WeekBean;
+import org.limingnihao.type.DateFastParamType;
 
 /**
  * Date常用方法
@@ -33,8 +33,13 @@ public class DateUtil {
 
 //        System.out.print(getTodayScope(new Date()).getStartDate() + "-" + getTodayScope(new Date()).getEndDate());
 //        System.out.print(getWeekScope(new Date()).getStartDate() + "-" + getWeekScope(new Date()).getEndDate());
-        System.out.print(getMonthScope(DateUtil.parse("2015-11-11")).getStartDate() + "-" + getMonthScope(DateUtil.parse("2015-11-11")).getEndDate());
+//        System.out.print(getMonthScope(DateUtil.parse("2015-11-11")).getStartDate() + "-" + getMonthScope(DateUtil.parse("2015-11-11")).getEndDate());
 //        System.out.print(getYearScope(new Date()).getStartDate() + "-" + getYearScope(new Date()).getEndDate());
+
+        List<DateBean> list = DateUtil.getListByStartEnd("2016-08-01", "2016-08-31");
+        for(DateBean b : list){
+            System.out.println(b);
+        }
     }
 
 
@@ -600,7 +605,7 @@ public class DateUtil {
                 startDate = getTomorrow(startDate);
             }
         }
-        List list = new ArrayList();
+        List<WeekBean> list = new ArrayList<WeekBean>();
         Date nowEnd = null;
         int i = 1;
         do {
@@ -798,23 +803,23 @@ public class DateUtil {
             calendar.set(Calendar.MILLISECOND, 0);
             endDate.setTime(calendar.getTime().getTime());
         } else if (paramDate.intValue() == DateFastParamType.IN_WEEK.value()) {
-            calendar.set(calendar.DATE, calendar.get(calendar.DATE) - 7);
+            calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 7);
             startDate.setTime(calendar.getTime().getTime());
             endDate.setTime(new Date().getTime());
         } else if (paramDate.intValue() == DateFastParamType.IN_MONTH.value()) {
-            calendar.set(calendar.MONTH, calendar.get(calendar.MONTH) - 1);
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
             startDate.setTime(calendar.getTime().getTime());
             endDate.setTime(new Date().getTime());
         } else if (paramDate.intValue() == DateFastParamType.IN_THREE_MONTH.value()) {
-            calendar.set(calendar.MONTH, calendar.get(calendar.MONTH) - 3);
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 3);
             startDate.setTime(calendar.getTime().getTime());
             endDate.setTime(new Date().getTime());
         } else if (paramDate.intValue() == DateFastParamType.IN_YEAR.value()) {
-            calendar.set(calendar.YEAR, calendar.get(calendar.YEAR - 1));
+            calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR - 1));
             startDate.setTime(calendar.getTime().getTime());
             endDate.setTime(new Date().getTime());
         } else if (paramDate.intValue() == DateFastParamType.ONE_YEAR_AGO.value()) {
-            calendar.set(calendar.YEAR, calendar.get(calendar.YEAR) - 1);
+            calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 1);
             endDate.setTime(calendar.getTime().getTime());
         } else if (paramDate.intValue() == DateFastParamType.NATURAL_MONTH.value()) {
             calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -830,6 +835,28 @@ public class DateUtil {
             calendar.set(Calendar.MILLISECOND, 0);
             endDate.setTime(calendar.getTime().getTime());
         }
+    }
+
+    /**
+     * 获取时间列表,根据开始、结束时间
+     * @return
+     */
+    public static List<DateBean> getListByStartEnd(String start, String end){
+        Calendar calendarStart = Calendar.getInstance();
+        calendarStart.setTime(DateUtil.parse(start));
+
+        Calendar calendarEnd = Calendar.getInstance();
+        calendarEnd.setTime(DateUtil.parse(end));
+
+        List<DateBean> list = new ArrayList<DateBean>();
+        DateBean bean = DateUtil.getDateBean(calendarStart.getTime());
+        list.add(bean);
+        while(calendarStart.getTimeInMillis() < calendarEnd.getTimeInMillis()){
+            calendarStart.add(Calendar.DAY_OF_MONTH, 1);
+            bean = DateUtil.getDateBean(calendarStart.getTime());
+            list.add(bean);
+        }
+        return list;
     }
 
 }

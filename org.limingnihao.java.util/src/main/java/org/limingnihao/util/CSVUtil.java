@@ -1,6 +1,13 @@
 package org.limingnihao.util;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -139,7 +146,7 @@ public class CSVUtil {
                 if(StringUtil.isBlank(accessToken)){
                     dateString.append("\"" + valueString + "\"" + ",");
                 }else{
-                    dateString.append("\"" + CryptAESUtil.AES_Encrypt(accessToken, valueString) + "\"" + ",");
+                    dateString.append("\"" + CryptAESUtil.encrypt(accessToken, valueString) + "\"" + ",");
                 }
             }
         } catch (Exception e) {

@@ -1,21 +1,21 @@
 package org.limingnihao.util;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;  
-import java.util.HashMap;  
-import java.util.Iterator;  
-import java.util.List;  
-import java.util.Map;  
-  
-import net.sf.json.JSON;  
-import net.sf.json.JSONSerializer;  
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
+
+import net.sf.json.JSON;
+import net.sf.json.JSONSerializer;
 import net.sf.json.xml.XMLSerializer;  
-  
-import org.dom4j.Document;  
-import org.dom4j.DocumentHelper;  
-import org.dom4j.Element;  
-import org.dom4j.io.OutputFormat;  
-import org.dom4j.io.XMLWriter;  
   
 /** 
  * common xml conver utility 

@@ -1,6 +1,7 @@
 package org.limingnihao.util;
 
 import java.security.Key;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -10,7 +11,13 @@ public class CryptAESUtil {
 
     private static final String AESTYPE = "AES/ECB/PKCS5Padding";
 
-    public static String AES_Encrypt(String keyStr, String plainText) {
+    /**
+     * 加密
+     * @param keyStr
+     * @param plainText
+     * @return
+     */
+    public static String encrypt(String keyStr, String plainText) {
         byte[] encrypt = null;
         try {
             Key key = generateKey(keyStr);
@@ -23,7 +30,13 @@ public class CryptAESUtil {
         return new String(Base64.encodeBase64(encrypt));
     }
 
-    public static String AES_Decrypt(String keyStr, String encryptData) {
+    /**
+     * 解密
+     * @param keyStr
+     * @param encryptData
+     * @return
+     */
+    public static String decrypt(String keyStr, String encryptData) {
         byte[] decrypt = null;
         try {
             Key key = generateKey(keyStr);
