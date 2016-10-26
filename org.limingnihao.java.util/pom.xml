@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.limingnihao.java</groupId>
 	<artifactId>org.limingnihao.java.util</artifactId>
-	<version>2.2.0</version>
+	<version>2.1.0</version>
 	<name>org.limingnihao.java.util</name>
 
 	<!-- 全局属性配置 -->

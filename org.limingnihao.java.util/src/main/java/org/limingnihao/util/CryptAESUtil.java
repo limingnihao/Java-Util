@@ -11,6 +11,16 @@ public class CryptAESUtil {
 
     private static final String AESTYPE = "AES/ECB/PKCS5Padding";
 
+    @Deprecated
+    public static String AES_Encrypt(String keyStr, String plainText) {
+        return CryptAESUtil.encrypt(keyStr, plainText);
+    }
+
+    @Deprecated
+    public static String AES_Decrypt(String keyStr, String plainText) {
+        return CryptAESUtil.decrypt(keyStr, plainText);
+    }
+
     /**
      * 加密
      * @param keyStr
