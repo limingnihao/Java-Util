@@ -1,5 +1,6 @@
 package org.limingnihao.util;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,25 @@ public class GsonUtil {
 		}
 		try{
 			return GSON.fromJson(json, clazz);
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * json转对象
+	 * @param json
+	 * @param type
+	 * @param <T>
+	 * @return
+	 */
+	public static <T> T fromJson(String json, Type type){
+		if (json == null || json.equals("") || json.equals("null")) {
+			return null;
+		}
+		try{
+			return GSON.fromJson(json, type);
 		}catch(Exception e){
 			e.printStackTrace();
 			return null;

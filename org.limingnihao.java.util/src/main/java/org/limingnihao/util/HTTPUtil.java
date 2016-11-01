@@ -332,15 +332,4 @@ public class HTTPUtil {
         return serverAddress;
     }
 
-
-    public static void main(String args[]){
-        String p = "f0d8f6c4810e9034";
-
-        String pa = "{\"name\":\"jason\",\"contact\":\"18622745166\",\"identity\":\"411303198802285933\",\"operateUserId\":0,\"operateSiteId\":0}";
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("params", CryptAESUtil.encrypt(p, pa));
-        map.put("accessToken", p);
-        String r = HTTPUtil.sendApachePostRequest("http://localhost:13100/interface/customer/register/create.do", map);
-        System.out.println(r);
-    }
 }
