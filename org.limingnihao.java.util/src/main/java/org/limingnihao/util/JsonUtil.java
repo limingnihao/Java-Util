@@ -24,7 +24,9 @@ public class JsonUtil {
 
 	private static String SIMPLE_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss:SSS";
 
-	public static void main(String args[]) {
+	public static Object getValue(String jsonString, String key){
+		JSONObject jsonObj = new JSONObject(jsonString);
+		return jsonObj.get(key);
 	}
 
 //	public static String objectToJson(Object targetObj) {
