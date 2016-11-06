@@ -1,5 +1,6 @@
 package org.limingnihao.java.util.test;
 
+import org.limingnihao.util.CalculatorUtil;
 import org.limingnihao.util.StringUtil;
 
 /**
@@ -18,7 +19,7 @@ public class AnnotationTest {
 //
 //            }
             String expression = "${a0} * 100 + ${a1} * 10 + ${a2}";
-            double b = StringUtil.calculator(expression, "4,5,6".split(","));
+            double b = CalculatorUtil.calculator(expression, "4,5,6".split(","));
             System.out.println(b);
         } catch (Exception e) {
             e.printStackTrace();
