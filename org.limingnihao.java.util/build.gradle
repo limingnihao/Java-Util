@@ -1,0 +1,67 @@
+
+apply plugin: "java"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "maven"
+
+group = "org.limingnihao.java"
+version = "3.0"
+
+// 全局属性设置
+ext {
+    junitVersion = "4.12"
+    log4jVersion = "1.7.21"
+    slf4jVersion = "1.7.21"
+    mysqlVersion = "6.0.4"
+    compileJava.options.encoding = "UTF-8"
+    compileTestJava.options.encoding = "UTF-8"
+}
+
+// 配置多个maven源
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "http://repo.spring.io/release" }
+    maven { url "http://repo.spring.io/milestone" }
+    maven { url "http://repo.spring.io/snapshot" }
+}
+
+// gradle插件
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "http://repo.spring.io/release" }
+        maven { url "http://repo.spring.io/milestone" }
+        maven { url "http://repo.spring.io/snapshot" }
+    }
+    dependencies {
+    }
+}
+
+// 依赖配置
+dependencies {
+    compile(
+            "mysql:mysql-connector-java:${mysqlVersion}",
+            "org.slf4j:slf4j-api:${slf4jVersion}",
+            "org.slf4j:slf4j-log4j12:${slf4jVersion}",
+            "org.apache.commons:commons-csv:1.2",
+            "org.apache.poi:poi-ooxml:3.9",
+            "org.json:json:20160810",
+            "javax.servlet:javax.servlet-api:3.1.0",
+            "commons-httpclient:commons-httpclient:3.1",
+            "commons-net:commons-net:3.3",
+            "com.google.code.gson:gson:2.7",
+            "com.belerweb:pinyin4j:2.5.0",
+            "com.google.zxing:core:3.2.0",
+            "com.aliyun.oss:aliyun-sdk-oss:2.1.0",
+            "net.sourceforge.jexcelapi:jxl:2.6.12",
+            "net.sourceforge.jeval:jeval:0.9.4",
+            "velocity:velocity:1.5",
+            "javax.mail:mail:1.4",
+            "dom4j:dom4j:1.6.1",
+    )
+    testCompile(
+            "junit:junit:${junitVersion}"
+    )
+}
