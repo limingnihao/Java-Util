@@ -100,33 +100,37 @@ public class XmlUtil {
 				Node node = nodeList.item(i);
 				String name = node.getNodeName();
 				String value = node.getNodeValue();
+				String content = node.getTextContent();
+//				System.out.println("name=" + name + ", value=" + value + ", content=" + content );
 				Field field = clazz.getDeclaredField(name);
 				String typeName = field.getType().getName();
+
+				String val = content;
 				field.setAccessible(true);
 				if (byte.class.getName().equals(typeName) || Byte.class.getName().equals(typeName)) {
-					field.set(targetObj, Byte.parseByte(value));
+					field.set(targetObj, Byte.parseByte(val));
 				} else if (short.class.getName().equals(typeName) || Short.class.getName().equals(typeName)) {
-					field.set(targetObj, Short.parseShort(value));
+					field.set(targetObj, Short.parseShort(val));
 				} else if (int.class.getName().equals(typeName) || Integer.class.getName().equals(typeName)) {
-					field.set(targetObj, Integer.parseInt(value));
+					field.set(targetObj, Integer.parseInt(val));
 				} else if (long.class.getName().equals(typeName) || Long.class.getName().equals(typeName)) {
-					field.set(targetObj, Long.parseLong(value));
+					field.set(targetObj, Long.parseLong(val));
 				} else if (float.class.getName().equals(typeName) || Float.class.getName().equals(typeName)) {
-					field.set(targetObj, Float.parseFloat(value));
+					field.set(targetObj, Float.parseFloat(val));
 				} else if (double.class.getName().equals(typeName) || Double.class.getName().equals(typeName)) {
-					field.set(targetObj, Double.parseDouble(value));
+					field.set(targetObj, Double.parseDouble(val));
 				} else if (char.class.getName().equals(typeName)) {
-					char[] chars = value.toCharArray();
+					char[] chars = val.toCharArray();
 					if (chars != null && chars.length > 0) {
 						field.set(targetObj, chars[0]);
 					}
 				} else if (boolean.class.getName().equals(typeName) || Boolean.class.getName().equals(typeName)) {
-					field.set(targetObj, Boolean.parseBoolean(value));
+					field.set(targetObj, Boolean.parseBoolean(val));
 				} else if (Date.class.getName().equals(typeName)) {
 					SimpleDateFormat format = new SimpleDateFormat(SIMPLE_DATE_FORMAT);
-					field.set(targetObj, format.parse(value));
+					field.set(targetObj, format.parse(val));
 				} else {
-					field.set(targetObj, value);
+					field.set(targetObj, val);
 				}
 			}
 			return (T) targetObj;
