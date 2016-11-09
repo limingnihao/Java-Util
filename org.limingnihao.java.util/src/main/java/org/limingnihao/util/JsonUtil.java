@@ -16,9 +16,9 @@ import org.json.JSONObject;
 
 /**
  * json解析器
- * 
+ *
  * @author limingnihao
- * 
+ *
  */
 public class JsonUtil {
 
@@ -70,6 +70,10 @@ public class JsonUtil {
 				String value = jsonObj.get(fileName).toString();
 				String typeName = field.getType().getName();
 				field.setAccessible(true);
+				if(value == null || "".equals(value)){
+					field.set(targetObj, null);
+					continue;
+				}
 				if (byte.class.getName().equals(typeName) || Byte.class.getName().equals(typeName)) {
 					field.set(targetObj, Byte.parseByte(value));
 				} else if (short.class.getName().equals(typeName) || Short.class.getName().equals(typeName)) {

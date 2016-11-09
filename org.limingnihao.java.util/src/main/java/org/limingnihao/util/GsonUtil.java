@@ -11,13 +11,13 @@ public class GsonUtil {
 
 	private static Gson GSON = new Gson();
 
-    /**
-     * json转对象
-     * @param json
-     * @param clazz
-     * @param <T>
-     * @return
-     */
+	/**
+	 * json转对象
+	 * @param json
+	 * @param clazz
+	 * @param <T>
+	 * @return
+	 */
 	public static <T> T fromJson(String json, Class<T> clazz) {
 		if (json == null || json.equals("") || json.equals("null")) {
 			return null;
@@ -57,25 +57,23 @@ public class GsonUtil {
 		return GSON.toJsonTree(src).toString();
 	}
 
-    /**
-     * 获取json中某一个key对应的value
-     * @param json
-     * @param key
-     * @return
-     */
-    public static String getValue(String json, String key){
-    	try{
-			List<Map<String,String>> list= GSON.fromJson(json,new TypeToken<List<Map<String,String>>>() { }.getType());
-			for(Map<String,String> map : list){
-				if(map.containsKey(key)){
-					return map.get(key);
-				}
+	/**
+	 * 获取json中某一个key对应的value
+	 * @param json
+	 * @param key
+	 * @return
+	 */
+	public static String getValue(String json, String key){
+		try{
+			Map<String,String> map= GSON.fromJson(json,new TypeToken<Map<String,String>>() { }.getType());
+			if(map.containsKey(key)){
+				return map.get(key);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
 			return null;
 		}
-        return null;
-    }
+		return null;
+	}
 
 }
