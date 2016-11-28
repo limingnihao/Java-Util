@@ -4,7 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
+
 
 /**
  * Created by Ran on 2016/6/13.
@@ -30,8 +31,7 @@ public class IOUtil {
      * 输入流转base64
      * */
     public static String InputStreamToBase64(InputStream is) throws IOException {
-        BASE64Encoder encoder = new BASE64Encoder();
-        return encoder.encode(IOUtil.InputStreamToByte(is));
+    	return Base64.encodeBase64String(IOUtil.InputStreamToByte(is));
     }
 
 
