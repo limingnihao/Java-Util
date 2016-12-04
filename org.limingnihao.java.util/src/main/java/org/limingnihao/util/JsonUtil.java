@@ -29,6 +29,14 @@ public class JsonUtil {
 		return jsonObj.get(key);
 	}
 
+	public static String getString(String jsonString, String key){
+		JSONObject jsonObj = new JSONObject(jsonString);
+		if(jsonObj.has(key)){
+			return jsonObj.get(key).toString();
+		}
+		return null;
+	}
+
 //	public static String objectToJson(Object targetObj) {
 //		StringBuffer jsonString = new StringBuffer();
 //		jsonString.append("{");
