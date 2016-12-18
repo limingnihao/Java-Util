@@ -32,6 +32,8 @@ public class OSSUtil {
 
     private String shanghaiEndpoint = "oss-cn-shanghai.aliyuncs.com";
     private String beijingEndpoint = "oss-cn-beijing.aliyuncs.com";
+    private String hangzhouEndpoint = "oss-cn-hangzhou.aliyuncs.com";
+
     private String endpoint = "oss-cn-beijing.aliyuncs.com";
     private String accessKeyId;
     private String accessKeySecret;
@@ -41,6 +43,19 @@ public class OSSUtil {
     public OSSUtil(String accessKeyId, String accessKeySecret){
         this.accessKeyId = accessKeyId;
         this.accessKeySecret = accessKeySecret;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
+    }
+
+    public void connect(String endpoint){
+        this.endpoint = endpoint;
+        this.connect();
     }
 
     /**
@@ -71,6 +86,14 @@ public class OSSUtil {
     }
 
     /**
+     * 链接
+     */
+    public void connectHangzhou(){
+        endpoint = hangzhouEndpoint;
+        connect();
+    }
+
+    /**
      * 断开
      */
     public void shutdown(){
@@ -85,41 +108,41 @@ public class OSSUtil {
 
     }
 
-    private String createFile(String key, String filePath)  throws Exception{
+    public String createFile(String key, String filePath)  throws Exception{
         return createFile(key, filePath, null);
     }
 
-    private String createFile(String key, String filePath, String dns) throws Exception {
+    public String createFile(String key, String filePath, String dns) throws Exception {
         logger.info("createFile - key=" + key + ", filePath=" + filePath + ", dns=" + dns);
         if(FileUtil.isExists(filePath)){
-            PutObjectResult result = client.putObject(bucketName, key, new File(filePath));
+            PutObjectResult result = this.client.putObject(this.bucketName, key, new File(filePath));
             if(StringUtil.isNotBlank(dns)){
                 return dns + "/" + key;
             }
             else{
-                return "http://" + bucketName + "." + endpoint + "/" + key;
+                return "http://" + this.bucketName + "." + this.endpoint + "/" + key;
             }
         }
         throw new FileNotFoundException("文件不存在!");
     }
 
-    private String createFile(String key, InputStream is){
+    public String createFile(String key, InputStream is){
         return createFile(key, is, null);
     }
 
-    private String createFile(String key, InputStream is, String dns){
-        PutObjectResult result = client.putObject(bucketName, key, is);
+    public String createFile(String key, InputStream is, String dns){
+        PutObjectResult result = this.client.putObject(this.bucketName, key, is);
         if(StringUtil.isNotBlank(dns)){
             return dns + "/" + key;
         }
         else{
-            return "http://" + bucketName + "." + endpoint + "/" + key;
+            return "http://" + this.bucketName + "." + this.endpoint + "/" + key;
         }
     }
 
     private boolean createFolder(String folder){
         try{
-            PutObjectResult result = client.putObject(bucketName, folder + "/", new ByteArrayInputStream(new byte[0]));
+            PutObjectResult result = this.client.putObject(this.bucketName, folder + "/", new ByteArrayInputStream(new byte[0]));
             logger.info("createFolder - folder=" + folder + ", " + result.toString());
             return true;
         }catch(Exception e){
@@ -127,6 +150,8 @@ public class OSSUtil {
         }
         return false;
     }
+
+
 
     /**
      * ----------------------------------- new --------------------------------------------
