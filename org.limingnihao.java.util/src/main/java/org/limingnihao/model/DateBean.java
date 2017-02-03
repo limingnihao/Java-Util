@@ -2,9 +2,10 @@ package org.limingnihao.model;
 
 import org.limingnihao.util.DateUtil;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class DateBean {
+public class DateBean implements Serializable {
 	private int id;
 	private int state;
 	private int year;

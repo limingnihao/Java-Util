@@ -2,10 +2,11 @@ package org.limingnihao.model;
 
 import org.limingnihao.util.DateUtil;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class WeekBean {
+public class WeekBean implements Serializable {
 
 	private int weekId;
 	private Date startDate;

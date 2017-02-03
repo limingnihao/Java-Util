@@ -1,6 +1,8 @@
 package org.limingnihao.model;
 
-public class SortBean {
+import java.io.Serializable;
+
+public class SortBean implements Serializable {
 
 	private String property;
 	private String direction;

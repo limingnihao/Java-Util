@@ -1,6 +1,8 @@
 package org.limingnihao.model;
 
-public class FileBean {
+import java.io.Serializable;
+
+public class FileBean implements Serializable {
 
 	private String fileName;
 	private String saveName;
