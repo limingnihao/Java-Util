@@ -888,17 +888,18 @@ public class DateUtil {
         if (delta < 48L * ONE_HOUR) {
             return "昨天";
         }
-        if (delta < 30L * ONE_DAY) {
-            long days = toDays(delta);
-            return (days <= 0 ? 1 : days) + ONE_DAY_AGO;
-        }
-        if (delta < 12L * 4L * ONE_WEEK) {
-            long months = toMonths(delta);
-            return (months <= 0 ? 1 : months) + ONE_MONTH_AGO;
-        } else {
-            long years = toYears(delta);
-            return (years <= 0 ? 1 : years) + ONE_YEAR_AGO;
-        }
+        return format(date, defaultDateFormatString);
+//        if (delta < 30L * ONE_DAY) {
+//            long days = toDays(delta);
+//            return (days <= 0 ? 1 : days) + ONE_DAY_AGO;
+//        }
+//        if (delta < 12L * 4L * ONE_WEEK) {
+//            long months = toMonths(delta);
+//            return (months <= 0 ? 1 : months) + ONE_MONTH_AGO;
+//        } else {
+//            long years = toYears(delta);
+//            return (years <= 0 ? 1 : years) + ONE_YEAR_AGO;
+//        }
     }
 
     private static long toSeconds(long date) {

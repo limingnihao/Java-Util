@@ -30,6 +30,10 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
+/**
+ * 请查看PoiExcelUtil
+ */
+@Deprecated
 public class ExcelUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(ExcelUtil.class);
@@ -84,6 +88,7 @@ public class ExcelUtil {
             return null;
         }
     }
+
 
     public static ArrayList<ArrayList<String>> import2003(String filePath, int sheetIndex) {
         logger.info("import2003 - filePath=" + filePath + ", sheetIndex=" + sheetIndex);
