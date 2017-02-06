@@ -1,19 +1,11 @@
 package org.limingnihao.java.util.test;
 
-import jxl.write.WriteException;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 import org.limingnihao.model.ExcelBean;
-import org.limingnihao.poi.ExcelExportUtil;
-import org.limingnihao.util.ExcelUtil;
+import org.limingnihao.poi.ExcelExport2003Util;
+import org.limingnihao.poi.ExcelExport2007Util;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +30,6 @@ public class ExcelTest {
             data.put("第一单元", list1);
 
 
-            ExcelExportUtil.exportExcel2007("/Volumes/Software/a1.xls", data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,13 +38,33 @@ public class ExcelTest {
     @Test
     public void moban(){
         try {
+            // 替换的数据
             List<ExcelBean> data = new ArrayList<>();
-            data.add(new ExcelBean(3, 2, "我是甲方"));
+            data.add(new ExcelBean(1, 3, "a007-我是替换后的编码"));
 
-            data.add(new ExcelBean(2, 4, "模板"));
-            ExcelExportUtil.saveTemplate2007("/Volumes/Software/合同模板.xlsx", "/Volumes/Software/合同模板3.xlsx", 0, data);
+            // 插入的数据
+            List<List<Object>> rowList = new ArrayList<>();
+            int startRow = 5;
+            for(int i=1; i<=5; i++){
+                List<Object> cellList = new ArrayList<>();
+                cellList.add("" + i);
+                cellList.add("a-" + i);
+                cellList.add("iphone7");
+                cellList.add("t-" + i);
+                cellList.add("部");
+                cellList.add(222);
+                cellList.add(6255);
+                cellList.add("=SUM(F" + (startRow+i+1) + "*G" + (startRow+i+1) + ")");
+                cellList.add("价格依据");
+                cellList.add("状态依据");
+                rowList.add(cellList);
+            }
+//            ExcelExport2003Util.saveTemplate2007("/Volumes/Workspace/空军项目/军工项目文件/合同模板0.xlsx", "/Volumes/Software/合同模板01.xlsx", 1, data);
 
-
+            XSSFWorkbook workbook = ExcelExport2007Util.getWorkbook("/Volumes/Workspace/空军项目/军工项目文件/合同模板0.xlsx");
+            ExcelExport2007Util.replace(workbook, 1, data);
+            ExcelExport2007Util.insert(workbook, 1, startRow, rowList);
+            ExcelExport2007Util.saveWorkbook(workbook, "/Volumes/Software/合同模板01.xlsx");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -9,7 +9,7 @@ public class ExcelBean implements Serializable {
 
     public int row;
     public int cell;
-    public String value;
+    public Object value;
 
     @Override
     public String toString() {
@@ -24,9 +24,9 @@ public class ExcelBean implements Serializable {
 
     }
 
-    public ExcelBean(int i, int j, String v){
-        this.row = i;
-        this.cell = j;
+    public ExcelBean(int row, int cell, Object v){
+        this.row = row;
+        this.cell = cell;
         this.value = v;
     }
 
@@ -46,11 +46,11 @@ public class ExcelBean implements Serializable {
         this.cell = cell;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 }

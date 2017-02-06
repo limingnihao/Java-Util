@@ -3,14 +3,12 @@ package org.limingnihao.poi;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.limingnihao.model.ExcelBean;
 import org.limingnihao.util.FileUtil;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by lishiming on 2017/2/3.
@@ -81,9 +79,9 @@ public class ExcelUtil {
     public static ArrayList<ArrayList<String>> importExcel(String filePath, int sheetIndex) {
         String type = FileUtil.getFileType(filePath);
         if (type.equals("xls")) {
-            return ExcelImpotUtil.importBySheetIndex2003(filePath, sheetIndex);
+            return ExcelImpot2003Util.importBySheetIndex(filePath, sheetIndex);
         } else if (type.equals("xlsx")) {
-            return ExcelImpotUtil.importBySheetIndex2007(filePath, sheetIndex);
+            return ExcelImpot2007Util.importBySheetIndex(filePath, sheetIndex);
         } else {
             return null;
         }
@@ -98,9 +96,9 @@ public class ExcelUtil {
      */
     public static ArrayList<ArrayList<String>> importExcel(FileInputStream is, String fileType, int sheetIndex) {
         if (fileType.equals("xls")) {
-            return ExcelImpotUtil.importBySheetIndex2003(is, sheetIndex);
+            return ExcelImpot2003Util.importBySheetIndex(is, sheetIndex);
         } else if (fileType.equals("xlsx")) {
-            return ExcelImpotUtil.importBySheetIndex2007(is, sheetIndex);
+            return ExcelImpot2007Util.importBySheetIndex(is, sheetIndex);
         } else {
             return null;
         }
@@ -115,32 +113,12 @@ public class ExcelUtil {
     public static boolean exportExcel(final String filePath, final HashMap<String, ArrayList<ArrayList<String>>> datas) {
         String type = FileUtil.getFileType(filePath);
         if (type.equals("xls")) {
-            return ExcelExportUtil.exportExcel2003(filePath, datas);
+            return ExcelExport2003Util.exportExcel(filePath, datas);
         } else if (type.equals("xlsx")) {
-            return ExcelExportUtil.exportExcel2007(filePath, datas);
+            return ExcelExport2007Util.exportExcel(filePath, datas);
         } else {
             return false;
         }
     }
-
-    /**
-     * 导出 - 带模板
-     * @param templateFilePath
-     * @param saveFilePath
-     * @param sheetIndex
-     * @param datas
-     * @return
-     */
-    public static boolean saveTemplate(String templateFilePath, String saveFilePath, int sheetIndex, List<ExcelBean> datas) {
-        String type = FileUtil.getFileType(templateFilePath);
-        if (type.equals("xls")) {
-            return ExcelExportUtil.saveTemplate2003(templateFilePath, saveFilePath, sheetIndex, datas);
-        } else if (type.equals("xlsx")) {
-            return ExcelExportUtil.saveTemplate2007(templateFilePath, saveFilePath, sheetIndex, datas);
-        } else {
-            return false;
-        }
-    }
-
 
 }
