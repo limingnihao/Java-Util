@@ -107,24 +107,23 @@ public class ExcelExport2007Util {
                 Object value = rowList.get(i).get(j);
                 XSSFCell fCell = targetRow.getCell(j);
                 if(value instanceof Integer){
-                    logger.info("" + (startRow+1) + ", " + j + ", 数值， " + value);
+                    logger.debug("" + (startRow+1) + ", " + j + ", 数值， " + value);
                     fCell.setCellType(CellType.NUMERIC);
                     fCell.setCellValue(NumberUtil.parseInt(value));
                 } else{
                     String v = value.toString();
                     if(v.startsWith("=")){
-                        logger.info("" + (startRow+1) + ", " + j + ", 公式， " + value);
+                        logger.debug("" + (startRow+1) + ", " + j + ", 公式， " + value);
                         fCell.setCellType(CellType.FORMULA);
                         fCell.setCellFormula(value.toString().replace("=", ""));
                     }else{
-                        logger.info("" + (startRow+1) + ", " + j + ", 字符， " + value);
+                        logger.debug("" + (startRow+1) + ", " + j + ", 字符， " + value);
                         fCell.setCellType(CellType.STRING);
                         fCell.setCellValue(value.toString());
                     }
                 }
             }
             startRow+=1;
-
         }
     }
 
