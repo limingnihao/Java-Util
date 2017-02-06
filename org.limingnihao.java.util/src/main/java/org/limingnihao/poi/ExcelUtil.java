@@ -72,6 +72,41 @@ public class ExcelUtil {
     }
 
     /**
+     *
+     * 导入，指定sheet
+     * @param filePath
+     * @param sheetIndex
+     * @return
+     */
+    public static ArrayList<ArrayList<String>> importExcel(String filePath, int sheetIndex) {
+        String type = FileUtil.getFileType(filePath);
+        if (type.equals("xls")) {
+            return ExcelImpotUtil.importBySheetIndex2003(filePath, sheetIndex);
+        } else if (type.equals("xlsx")) {
+            return ExcelImpotUtil.importBySheetIndex2007(filePath, sheetIndex);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 导入，指定sheet
+     * @param is
+     * @param fileType
+     * @param sheetIndex
+     * @return
+     */
+    public static ArrayList<ArrayList<String>> importExcel(FileInputStream is, String fileType, int sheetIndex) {
+        if (fileType.equals("xls")) {
+            return ExcelImpotUtil.importBySheetIndex2003(is, sheetIndex);
+        } else if (fileType.equals("xlsx")) {
+            return ExcelImpotUtil.importBySheetIndex2007(is, sheetIndex);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * 导出excel
      * @param filePath
      * @param datas
@@ -107,21 +142,5 @@ public class ExcelUtil {
         }
     }
 
-    /**
-     *
-     * 导入，指定sheet
-     * @param filePath
-     * @param sheetIndex
-     * @return
-     */
-    public static ArrayList<ArrayList<String>> importExcel(String filePath, int sheetIndex) {
-        String type = FileUtil.getFileType(filePath);
-        if (type.equals("xls")) {
-            return ExcelImpotUtil.importBySheetIndex2003(filePath, sheetIndex);
-        } else if (type.equals("xlsx")) {
-            return ExcelImpotUtil.importBySheetIndex2007(filePath, sheetIndex);
-        } else {
-            return null;
-        }
-    }
+
 }

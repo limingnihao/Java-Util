@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -25,17 +26,27 @@ public class ExcelImpotUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(ExcelImpotUtil.class);
 
-    public static ArrayList<ArrayList<String>> importBySheetIndex2003(String filePath, int sheetIndex) {
+    public static ArrayList<ArrayList<String>> importBySheetIndex2003(String filePath, int sheetIndex){
         logger.info("import2003 - filePath=" + filePath + ", sheetIndex=" + sheetIndex);
         File file = new File(filePath);
         if (!file.exists()) {
             logger.info("import2003 - 文件不存在");
             return null;
         }
+        try {
+            FileInputStream is = new FileInputStream(filePath);
+            return importBySheetIndex2003(is, sheetIndex);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ArrayList<ArrayList<String>> importBySheetIndex2003(FileInputStream is, int sheetIndex) {
         //logger.info("import2003 - 1.文件存在 - filePath=" + filePath);
         ArrayList<ArrayList<String>> rowList = new ArrayList<ArrayList<String>>();
         try {
-            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(filePath));
+            POIFSFileSystem fs = new POIFSFileSystem(is);
             // 得到Excel工作簿对象
             HSSFWorkbook workbook = new HSSFWorkbook(fs);
             // 得到Excel工作表对象
@@ -76,31 +87,41 @@ public class ExcelImpotUtil {
                 rowList.add(columnList);
             }
         } catch (Exception e) {
-            logger.info("import2003 - filePath=" + filePath + ", " + e);
             e.printStackTrace();
         }
         return rowList;
     }
 
-    public static ArrayList<ArrayList<String>> importBySheetIndex2007(String filePath, int sheetIndex) {
+    public static ArrayList<ArrayList<String>> importBySheetIndex2007(String filePath, int sheetIndex){
         logger.info("import2007 - filePath=" + filePath + ", sheetIndex=" + sheetIndex);
         File file = new File(filePath);
         if (!file.exists()) {
             logger.info("import2007 - 文件不存在");
             return null;
         }
+        try {
+            FileInputStream is = new FileInputStream(filePath);
+            return importBySheetIndex2007(is, sheetIndex);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ArrayList<ArrayList<String>> importBySheetIndex2007(FileInputStream is, int sheetIndex) {
+
         //logger.info("import2007 - 1.文件存在 - filePath=" + filePath);
         ArrayList<ArrayList<String>> rowList = new ArrayList<ArrayList<String>>();
         try {
             //NPOIFSFileSystem fs = new NPOIFSFileSystem();
             // 得到Excel工作簿对象
-            XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(filePath));
+            XSSFWorkbook workbook = new XSSFWorkbook(is);
             // 得到Excel工作表对象
             int max = workbook.getNumberOfSheets();
             sheetIndex = sheetIndex <= 0 ? max : sheetIndex;
             XSSFSheet sheet = workbook.getSheetAt(sheetIndex - 1);
             int rowNumLast = sheet.getLastRowNum();
-            logger.info("import2007 - filePath=" + filePath + ", sheet=" + sheetIndex + ", rowNumLast=" + rowNumLast);
+            logger.info("import2007 - sheet=" + sheetIndex + ", rowNumLast=" + rowNumLast);
             // i循环行
             for (int i = 0; i <= rowNumLast; i++) {
                 ArrayList<String> columnList = new ArrayList<String>();
@@ -137,7 +158,6 @@ public class ExcelImpotUtil {
                 rowList.add(columnList);
             }
         } catch (Exception e) {
-            logger.info("import2007 - filePath=" + filePath + ", " + e);
             e.printStackTrace();
         }
         return rowList;
