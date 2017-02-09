@@ -48,12 +48,8 @@ public class ExcelImpot2007Util {
             //NPOIFSFileSystem fs = new NPOIFSFileSystem();
             // 得到Excel工作簿对象
             XSSFWorkbook workbook = new XSSFWorkbook(is);
-            // 得到Excel工作表对象
-            int max = workbook.getNumberOfSheets();
-            sheetIndex = sheetIndex <= 0 ? max : sheetIndex;
-            XSSFSheet sheet = workbook.getSheetAt(sheetIndex - 1);
+            XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
             int rowNumLast = sheet.getLastRowNum();
-            logger.info("import2007 - sheet=" + sheetIndex + ", rowNumLast=" + rowNumLast);
             // i循环行
             for (int i = 0; i <= rowNumLast; i++) {
                 ArrayList<String> columnList = new ArrayList<String>();

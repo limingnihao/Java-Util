@@ -5,8 +5,10 @@ import org.junit.Test;
 import org.limingnihao.model.ExcelBean;
 import org.limingnihao.poi.ExcelExport2003Util;
 import org.limingnihao.poi.ExcelExport2007Util;
+import org.limingnihao.poi.ExcelImpot2007Util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,6 +16,14 @@ import java.util.List;
  * Created by lishiming on 2017/2/3.
  */
 public class ExcelTest {
+
+    @Test
+    public void importer(){
+        ArrayList<ArrayList<String>> data = ExcelImpot2007Util.importBySheetIndex("/Volumes/Software/berure.xlsx", 0);
+        for(ArrayList<String> list : data){
+            System.out.println(Arrays.toString(list.toArray()));
+        }
+    }
 
     @Test
     public void export(){
