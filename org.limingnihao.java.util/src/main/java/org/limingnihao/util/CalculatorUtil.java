@@ -22,14 +22,34 @@ public class CalculatorUtil {
             for(Map.Entry<String, String> e : params.entrySet()){
                 expression = expression.replace("${" + e.getKey() + "}", e.getValue());
             }
-            System.out.println(expression);
             Evaluator eval = new Evaluator();
             String result = eval.evaluate(expression);
-            double r= NumberUtil.getDoubleScale(NumberUtil.parseDouble(result), 2);
+            double r= NumberUtil.getDoubleScale(NumberUtil.parseDouble(result), 4);
             return r;
         } catch (Exception e) {
             e.printStackTrace();
-            return -1;
+            return 0;
+        }
+    }
+
+    /**
+     * 根据公式计算结果
+     * @param expression
+     * @param params
+     * @return
+     */
+    public static double calculator(String expression, Map<String, String> params){
+        try {
+            for(Map.Entry<String, String> e : params.entrySet()){
+                expression = expression.replace("${" + e.getKey() + "}", e.getValue());
+            }
+            Evaluator eval = new Evaluator();
+            String result = eval.evaluate(expression);
+            double r = NumberUtil.getDoubleScale(NumberUtil.parseDouble(result), 4);
+            return r;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
     }
 
