@@ -1,19 +1,16 @@
 package org.limingnihao.poi;
 
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.*;
 import org.limingnihao.model.ExcelBean;
 import org.limingnihao.util.NumberUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by lishiming on 2017/2/3.
@@ -60,13 +57,18 @@ public class ExcelExport2007Util {
                 fCell.setCellType(CellType.NUMERIC);
                 fCell.setCellValue(NumberUtil.parseInt(value));
             } else{
-                String v = value.toString();
+                String v = "";
+                if(value != null){
+                    v = value.toString();
+                }
                 if(v.startsWith("=")){
                     fCell.setCellType(CellType.FORMULA);
+                    fCell.setCellFormula(v.replace("=", ""));
                 }else{
                     fCell.setCellType(CellType.STRING);
+                    fCell.setCellValue(v);
                 }
-                fCell.setCellValue(value.toString());
+
             }
         }
     }
@@ -111,20 +113,25 @@ public class ExcelExport2007Util {
                     fCell.setCellType(CellType.NUMERIC);
                     fCell.setCellValue(NumberUtil.parseInt(value));
                 } else{
-                    String v = value.toString();
+                    String v = "";
+                    if(value != null){
+                        v = value.toString();
+                    }
                     if(v.startsWith("=")){
                         logger.debug("" + (startRow+1) + ", " + j + ", 公式， " + value);
                         fCell.setCellType(CellType.FORMULA);
-                        fCell.setCellFormula(value.toString().replace("=", ""));
+                        fCell.setCellFormula(v.replace("=", ""));
                     }else{
                         logger.debug("" + (startRow+1) + ", " + j + ", 字符， " + value);
                         fCell.setCellType(CellType.STRING);
-                        fCell.setCellValue(value.toString());
+                        fCell.setCellValue(v);
                     }
                 }
             }
             startRow+=1;
         }
+
+        sheet.getPrintSetup().setLandscape(true);
     }
 
 
@@ -154,5 +161,87 @@ public class ExcelExport2007Util {
         }
         return true;
     }
+
+
+    public static void copySheet(int srcSheet,int tartSheet,  XSSFWorkbook workbook){
+        Sheet sheet1 = workbook.getSheetAt(srcSheet);
+        Sheet sheet2 = workbook.createSheet("附表"+tartSheet);
+        sheet2.getPrintSetup().setLandscape(true);//设置横向打印
+
+        CellRangeAddress region = null;
+        for (int i = 0; i < sheet1.getNumMergedRegions(); i++) {
+            region = sheet1.getMergedRegion(i);
+            if ((region.getFirstColumn() >= sheet1.getFirstRowNum())
+                    && (region.getLastRow() <= sheet1.getLastRowNum())) {
+                sheet2.addMergedRegion(region);
+            }
+        }
+
+        //复制内容
+        Row rowFrom = null;
+        Row rowTo = null;
+        Cell cellFrom = null;
+        Cell cellTo = null;
+        for (int i = sheet1.getFirstRowNum(); i < sheet1.getLastRowNum(); i++) {
+            rowFrom = sheet1.getRow(i);
+            if (null == rowFrom){
+                continue;
+            }
+
+            rowTo = sheet2.createRow(i);
+            rowTo.setHeight(rowFrom.getHeight());
+            for (int j = 0; j < rowFrom.getLastCellNum(); j++) {
+                sheet2.setColumnWidth(j, sheet1.getColumnWidth(j));
+                if(null != sheet1.getColumnStyle(j)){
+                    sheet2.setDefaultColumnStyle(j, sheet1.getColumnStyle(j));
+                }
+
+                cellFrom = rowFrom.getCell(j);
+                if (null == cellFrom){
+                    continue;
+                }
+
+                cellTo = rowTo.createCell(j);
+                cellTo.setCellStyle(cellFrom.getCellStyle());
+                cellTo.setCellType(cellFrom.getCellType());
+
+                if(Cell.CELL_TYPE_STRING == cellFrom.getCellType()){
+                    cellTo.setCellValue(cellFrom.getStringCellValue());
+                }else if(Cell.CELL_TYPE_NUMERIC == cellFrom.getCellType()){
+                    cellTo.setCellValue(cellFrom.getNumericCellValue());
+                }
+            }
+        }
+
+        sheet2.setDisplayGridlines(true);//
+        sheet2.getPrintSetup().setLandscape(true);//设置横向打印
+    }
+
+    public static void main(String[] args){
+        try{
+            XSSFWorkbook workbook = ExcelExport2007Util.getWorkbook("/Users/wangheng/Desktop/贵州贵阳世纪城社区.xlsx");
+//            Sheet sheet = workbook.cloneSheet(0, "附表1");
+            ExcelExport2007Util.copySheet(0,1,workbook);
+            ExcelExport2007Util.replace(workbook, 1, new ArrayList<>());
+            ExcelExport2007Util.insert(workbook, 1,1, new ArrayList<>());
+            System.out.println(workbook.getSheetAt(0).getPrintSetup().getLandscape());
+            System.out.println(workbook.getSheetAt(1).getPrintSetup().getLandscape());
+
+//            PrintSetup printSetup = workbook.getSheetAt(1).getPrintSetup();
+//            printSetup.setLandscape(true);
+//            System.out.println(printSetup.getLandscape());
+//            System.out.println(workbook.getSheetAt(2).getPrintSetup().getLandscape());
+           workbook.write(new FileOutputStream("/Users/wangheng/Desktop/贵州贵阳世纪城社区.xlsx"));
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+
+
 
 }

@@ -11,16 +11,6 @@ public class CryptAESUtil {
 
     private static final String AESTYPE = "AES/ECB/PKCS5Padding";
 
-    @Deprecated
-    public static String AES_Encrypt(String keyStr, String plainText) {
-        return CryptAESUtil.encrypt(keyStr, plainText);
-    }
-
-    @Deprecated
-    public static String AES_Decrypt(String keyStr, String plainText) {
-        return CryptAESUtil.decrypt(keyStr, plainText);
-    }
-
     /**
      * 加密
      * @param keyStr
@@ -52,7 +42,7 @@ public class CryptAESUtil {
             Key key = generateKey(keyStr);
             Cipher cipher = Cipher.getInstance(AESTYPE);
             cipher.init(Cipher.DECRYPT_MODE, key);
-            decrypt = cipher.doFinal(Base64.decodeBase64(encryptData.getBytes()));
+            decrypt = cipher.doFinal(Base64.decodeBase64(encryptData.getBytes("UTF-8")));
         } catch (Exception e) {
             e.printStackTrace();
         }

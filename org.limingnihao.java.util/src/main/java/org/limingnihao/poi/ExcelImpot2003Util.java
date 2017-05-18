@@ -43,9 +43,11 @@ public class ExcelImpot2003Util {
             HSSFWorkbook workbook = new HSSFWorkbook(fs);
             // 得到Excel工作表对象
             int max = workbook.getNumberOfSheets();
+            sheetIndex = sheetIndex <= 0 ? max : sheetIndex;
             // 得到Excel工作表对象
-            HSSFSheet sheet = workbook.getSheetAt(sheetIndex);
+            HSSFSheet sheet = workbook.getSheetAt(sheetIndex - 1);
             int rowNumLast = sheet.getLastRowNum();
+            //logger.info("import2003 - filePath=" + filePath + ", sheet=" + k + ", rowNumLast=" + rowNumLast);
             // i循环行
             for (int i = 0; i <= rowNumLast; i++) {
                 ArrayList<String> columnList = new ArrayList<String>();

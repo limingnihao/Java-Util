@@ -49,7 +49,7 @@ public class HTTPUtil {
     public static final String CONTENT_TYPE_APP_FORM = "application/x-www-form-urlencoded";
     private static final String DEFAULT_ENCODING = "UTF-8";
 
-    private static final int TIME_OUT_HTTP = 5000;
+    private static final int TIME_OUT_HTTP = 10000;
 
     private static RequestConfig requestConfig = null;
 
@@ -148,7 +148,8 @@ public class HTTPUtil {
 //            postMethod.setRequestEntity(new MultipartRequestEntity(parts, postMethod.getParams()));
             httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(HTTPUtil.TIME_OUT_HTTP);
             httpClient.executeMethod(postMethod);
-            if (postMethod.getStatusCode() == HttpStatus.SC_OK) {
+            logger.info("sendApachePostRequest - url=" + url + ", statusCode=" + postMethod.getStatusCode());
+            if (postMethod.getStatusCode() == HttpStatus.SC_OK || postMethod.getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
                 InputStream inputStream = postMethod.getResponseBodyAsStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
                 StringBuffer stringBuffer = new StringBuffer();
@@ -198,6 +199,7 @@ public class HTTPUtil {
     /**
      * 使用jdk的http的post请求
      */
+    @Deprecated
     public static String sendPostHttpRequest(String endpoint, Map<String, String> params) {
         String result = null;
         try {
@@ -330,6 +332,23 @@ public class HTTPUtil {
     public static String getServerAddress(HttpServletRequest request) {
         String serverAddress = request.getScheme() + "://" + request.getServerName();
         return serverAddress;
+    }
+
+    /**
+     * 封装一个直接aes加密的，貌似没啥用呢
+     * @param url
+     * @param params
+     * @param accessToken
+     * @param platformCode
+     * @return
+     */
+    public static String postApacheAes(String url, String params, String accessToken, String platformCode){
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("params", CryptAESUtil.encrypt(accessToken, params));
+        map.put("accessToken", accessToken);
+        map.put("platformCode", platformCode);
+        String r = HTTPUtil.sendApachePostRequest(url, map);
+        return r;
     }
 
 }

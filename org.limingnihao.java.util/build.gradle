@@ -35,8 +35,6 @@ buildscript {
         maven { url "http://repo.spring.io/milestone" }
         maven { url "http://repo.spring.io/snapshot" }
     }
-    dependencies {
-    }
 }
 
 // 依赖配置
