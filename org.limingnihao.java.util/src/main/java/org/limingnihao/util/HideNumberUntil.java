@@ -3,6 +3,7 @@ package org.limingnihao.util;
 /**
  * Created by 唐溶波 on 16/3/10.
  */
+@Deprecated
 public class HideNumberUntil {
 
 

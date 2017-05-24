@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -111,4 +112,27 @@ public class Md5Util {
     private static void appendHex(StringBuffer sb, byte b) {
         sb.append(HEX.charAt((b >> 4) & 0x0f)).append(HEX.charAt(b & 0x0f));
     }
+
+
+
+    public static String signitureWithMD5(String key, String value) throws NoSuchAlgorithmException {
+        return signitureWithMD5(key, value, "UTF-8");
+    }
+
+    public static String signitureWithMD5(String key, String value, String charset) throws NoSuchAlgorithmException {
+        MessageDigest messageDigest = null;
+        messageDigest = MessageDigest.getInstance("MD5");
+        messageDigest.reset();
+        messageDigest.update(value.getBytes(Charset.forName(charset)));
+
+        Object byteArray = null;
+        byte[] byteArray1;
+        if(key == null) {
+            byteArray1 = messageDigest.digest();
+        } else {
+            byteArray1 = messageDigest.digest(key.getBytes(Charset.forName(charset)));
+        }
+        return Md5Util.toHex(byteArray1).toLowerCase();
+    }
+
 }

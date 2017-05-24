@@ -168,6 +168,34 @@ public class StringUtil {
         return m.matches();
     }
 
+
+	/**
+	 * 隐藏手机号中间4位
+	 * @param phone
+	 * @return
+	 */
+	public static String hidePhone(String phone){
+		if(StringUtil.isBlank(phone)){
+			return phone;
+		}
+		return phone.substring(0,3) + "****" + phone.substring(7, phone.length());
+	}
+
+	/**
+	 * 隐藏邮箱中间部分
+	 * @param email
+	 * @param regex 正则表达式
+	 * @return
+	 */
+	public static String hideEmail(String email ,String regex){
+		regex = StringUtil.isNotBlank(regex) ? regex :  "(\\w{3})(\\w+)(\\w{2})(@\\w+)";
+		if(StringUtil.isNotBlank(email)){
+			return email.replaceAll(regex, "$1****$3$4");
+		}
+
+		return email;
+	}
+
 	public static void main(String[] args) {
 //		System.out.println(unicodeConvert("\\u627F\\u5FB7"));
 //        System.out.println(decode("%E3%80%90%E7%9F%AD%E4%BF%A1%E9%80%9A%E3%80%91%E6%82%A8%E7%9A%84%E9%AA%8C%E8%AF%81%E7%A0%81%EF%BC%9A888888"));

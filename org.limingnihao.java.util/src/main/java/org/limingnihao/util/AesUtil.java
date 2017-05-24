@@ -14,6 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.limingnihao.exception.AesErrorException;
 
+@Deprecated
 public class AesUtil {
 
 	private final static String HEX = "0123456789ABCDEF";
