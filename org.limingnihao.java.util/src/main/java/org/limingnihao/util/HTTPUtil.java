@@ -30,6 +30,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
@@ -127,7 +128,6 @@ public class HTTPUtil {
         String response = null;
         HttpClient httpClient = new HttpClient();
         PostMethod postMethod = new PostMethod(url);
-
         try {
             //构造键值对参数
             List<NameValuePair> partList = new ArrayList<NameValuePair>();
@@ -210,6 +210,8 @@ public class HTTPUtil {
             httpUrlConnection.setConnectTimeout(5000);
             httpUrlConnection.setReadTimeout(5000);
             httpUrlConnection.setRequestMethod("POST");
+            // 进行编码
+            httpUrlConnection.setRequestProperty("Content-Type","application/json");
 
             String paramString = "";
             if (params != null && params.size() > 0) {
@@ -223,6 +225,41 @@ public class HTTPUtil {
             }
             DataOutputStream writer = new DataOutputStream(httpUrlConnection.getOutputStream());
             writer.write(paramString.getBytes("UTF-8"));
+            writer.flush();
+            writer.close();
+            BufferedReader in = new BufferedReader(new InputStreamReader((InputStream) httpUrlConnection.getInputStream(), DEFAULT_ENCODING));
+            String line = null;
+            StringBuilder sb = new StringBuilder();
+            while ((line = in.readLine()) != null) {
+                sb.append(line);
+            }
+            in.close();
+            httpUrlConnection.disconnect();
+            result = sb.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 使用jdk的http的post请求
+     */
+    public static String sendPostJson(String endpoint, String json) {
+        String result = null;
+        try {
+            HttpURLConnection httpUrlConnection = (HttpURLConnection) new URL(endpoint).openConnection();
+            httpUrlConnection.setDoOutput(true);
+            httpUrlConnection.setDoInput(true);
+            httpUrlConnection.setUseCaches(false);
+            httpUrlConnection.setConnectTimeout(5000);
+            httpUrlConnection.setReadTimeout(5000);
+            httpUrlConnection.setRequestMethod("POST");
+            // 进行编码
+            httpUrlConnection.setRequestProperty("Content-Type","application/json");
+
+            DataOutputStream writer = new DataOutputStream(httpUrlConnection.getOutputStream());
+            writer.write(json.getBytes("UTF-8"));
             writer.flush();
             writer.close();
             BufferedReader in = new BufferedReader(new InputStreamReader((InputStream) httpUrlConnection.getInputStream(), DEFAULT_ENCODING));
