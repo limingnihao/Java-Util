@@ -64,8 +64,7 @@ public class ExcelImpot2003Util {
                     Object value = null;
                     if (cell != null) {
                         if (cell.getCellTypeEnum() == CellType.NUMERIC) {
-                            Double d = cell.getNumericCellValue();
-                            value = d.doubleValue();
+                            value = cell.getNumericCellValue();
                         } else if (cell.getCellTypeEnum() == CellType.STRING) {
                             value = cell.getStringCellValue();
                         }

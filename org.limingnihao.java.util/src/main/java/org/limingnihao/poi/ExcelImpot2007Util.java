@@ -65,22 +65,21 @@ public class ExcelImpot2007Util {
                     //logger.info("~~~~~~[" + i + "," + j + "] - cell=" + cell );
                     Object value = null;
                     if (cell != null) {
-                        if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                        if (cell.getCellTypeEnum() == CellType.NUMERIC) {
                             if (HSSFDateUtil.isCellDateFormatted(cell)) {
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                                 value = sdf.format(HSSFDateUtil.getJavaDate(cell.getNumericCellValue())).toString();
                             } else {
-                                Double d = cell.getNumericCellValue();
-                                value = d.intValue();
+                                value = cell.getNumericCellValue();
                             }
-                        } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                        } else if (cell.getCellTypeEnum() == CellType.STRING) {
                             value = cell.getStringCellValue();
                         }
                         columnList.add(value != null ? value.toString().trim() : "");
                     } else {
                         columnList.add("");
                     }
-//						logger.info("~~~~~~[" + i + "," + j + "] - " + cell.getCellType() + ", cell=" + cell + ", value=" + value);
+                    //System.out.println("~~~~~~[" + i + "," + j + "] - " + cell.getCellType() + ", cell=" + cell + ", value=" + value);
                 }
                 //logger.info("i=" + i + "" + Arrays.toString(columnList.toArray()));
                 rowList.add(columnList);

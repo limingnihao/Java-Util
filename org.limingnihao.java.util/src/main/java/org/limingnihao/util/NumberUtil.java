@@ -1,6 +1,7 @@
 package org.limingnihao.util;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,6 +97,11 @@ public class NumberUtil {
 		return bd.doubleValue();
 	}
 
+	public static String format(double value, String pattern){
+		DecimalFormat df = new DecimalFormat(pattern);
+		return df.format(value);
+	}
+
 	public static BigDecimal toBigDecimal(Double value, int scale){
 		if(value != null){
 			return new BigDecimal(value).setScale(10, BigDecimal.ROUND_HALF_UP);
@@ -164,6 +170,7 @@ public class NumberUtil {
 				return Integer.parseInt(value.toString());
 			}
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
 		}
 		return 0;
 	}

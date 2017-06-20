@@ -53,10 +53,12 @@ public class ExcelExport2007Util {
             if(fCell == null){
                 throw new NullPointerException("此单元格不存在:" + row + ", " + cell);
             }
-            if(value instanceof Integer){
-                fCell.setCellType(CellType.NUMERIC);
-                fCell.setCellValue(NumberUtil.parseInt(value));
-            } else{
+//            if(value instanceof Integer){
+//                fCell.setCellType(CellType.NUMERIC);
+//                fCell.setCellValue(NumberUtil.parseInt(value));
+//                logger.debug("replace - row=" + row + ", cell=" + cell + ", value=" + value + ", type=CellType.NUMERIC");
+//            } else
+            {
                 String v = "";
                 if(value != null){
                     v = value.toString();
@@ -64,9 +66,11 @@ public class ExcelExport2007Util {
                 if(v.startsWith("=")){
                     fCell.setCellType(CellType.FORMULA);
                     fCell.setCellFormula(v.replace("=", ""));
+                    logger.debug("replace - row=" + row + ", cell=" + cell + ", value=" + value + ", type=CellType.FORMULA");
                 }else{
-                    fCell.setCellType(CellType.STRING);
+//                    fCell.setCellType(CellType.STRING);
                     fCell.setCellValue(v);
+                    logger.debug("replace - row=" + row + ", cell=" + cell + ", value=" + value + ", type=CellType.STRING");
                 }
 
             }
