@@ -14,8 +14,22 @@
         <slf4j.version>1.7.21</slf4j.version>
 		<mysql.version>6.0.4</mysql.version>
 	</properties>
-
 	<repositories>
+		<repository>
+			<id>nexus-public</id>
+			<name>nexus-public</name>
+			<url>http://123.57.172.195:8081/nexus/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>Releases</id>
+			<name>Nexus Release Repository</name>
+			<url>http://123.57.172.195:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<repository>
+			<id>nexus-thirdparty</id>
+			<name>nexus-thirdparty</name>
+			<url>http://123.57.172.195:8081/nexus/content/repositories/thirdparty/</url>
+		</repository>
 		<repository>
 			<id>central</id>
 			<name>Maven Central</name>
@@ -31,39 +45,18 @@
 		</repository>
 	</repositories>
 
-    <!--<repositories>-->
-        <!--<repository>-->
-            <!--<id>nexus-central</id>-->
-            <!--<name>nexus-central</name>-->
-            <!--<url>http://123.57.172.195:8081/nexus/content/repositories/central/</url>-->
-        <!--</repository>-->
-        <!--<repository>-->
-            <!--<id>nexus-spring-release</id>-->
-            <!--<name>nexus-spring-release</name>-->
-            <!--<url>http://123.57.172.195:8081/nexus/content/repositories/spring-release</url>-->
-        <!--</repository>-->
-    <!--</repositories>-->
-
-    <!--<pluginRepositories>-->
-        <!--<pluginRepository>-->
-            <!--<id>nexus-central-plugin</id>-->
-            <!--<name>nexus-central-plugin</name>-->
-            <!--<url>http://123.57.172.195:8081/nexus/content/repositories/central/</url>-->
-        <!--</pluginRepository>-->
-    <!--</pluginRepositories>-->
-
-    <!--<distributionManagement>-->
-        <!--<repository>-->
-            <!--<id>Releases</id>-->
-            <!--<name>releases</name>-->
-            <!--<url>http://123.57.172.195:8081/nexus/content/repositories/releases</url>-->
-        <!--</repository>-->
-        <!--<snapshotRepository>-->
-            <!--<id>Snapshots</id>-->
-            <!--<name>snapshots</name>-->
-            <!--<url>http://123.57.172.195:8081/nexus/content/repositories/snapshots</url>-->
-        <!--</snapshotRepository>-->
-    <!--</distributionManagement>-->
+	<distributionManagement>
+		<repository>
+			<id>Releases</id>
+			<name>Nexus Release Repository</name>
+			<url>http://123.57.172.195:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>Snapshots</id>
+			<name>Nexus Snapshot Repository</name>
+			<url>http://123.57.172.195:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
     <build>
 		<plugins>
