@@ -110,7 +110,7 @@ public class ExcelUtil {
      * @param datas
      * @return
      */
-    public static boolean exportExcel(final String filePath, final HashMap<String, ArrayList<ArrayList<String>>> datas) {
+    public static boolean exportExcel(final String filePath, final HashMap<String, ArrayList<ArrayList<Object>>> datas) {
         String type = FileUtil.getFileType(filePath);
         if (type.equals("xls")) {
             return ExcelExport2003Util.exportExcel(filePath, datas);

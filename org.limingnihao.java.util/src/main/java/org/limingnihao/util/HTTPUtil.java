@@ -144,14 +144,14 @@ public class HTTPUtil {
                 data[i] = partList.get(i);
             }
             postMethod.setRequestBody(data);
-            postMethod.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8");
+            postMethod.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, DEFAULT_ENCODING);
 //            postMethod.setRequestEntity(new MultipartRequestEntity(parts, postMethod.getParams()));
             httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(HTTPUtil.TIME_OUT_HTTP);
             httpClient.executeMethod(postMethod);
             logger.info("sendApachePostRequest - url=" + url + ", statusCode=" + postMethod.getStatusCode());
             if (postMethod.getStatusCode() == HttpStatus.SC_OK || postMethod.getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
                 InputStream inputStream = postMethod.getResponseBodyAsStream();
-                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, DEFAULT_ENCODING));
                 StringBuffer stringBuffer = new StringBuffer();
                 String str = "";
                 while ((str = br.readLine()) != null) {

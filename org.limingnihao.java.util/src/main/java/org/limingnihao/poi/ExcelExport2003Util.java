@@ -75,19 +75,24 @@ public class ExcelExport2003Util {
     }
 
 
-    public static boolean exportExcel(final String filePath, final HashMap<String, ArrayList<ArrayList<String>>> data){
+    public static boolean exportExcel(final String filePath, final HashMap<String, ArrayList<ArrayList<Object>>> data){
         try {
             HSSFWorkbook workbook = new HSSFWorkbook();
             for (final String label : data.keySet()) {
                 HSSFSheet sheet = workbook.createSheet(label.replaceAll("\\[|\\]|\\\\|\\:|\\?|\\/", "_"));
-                ArrayList<ArrayList<String>> value = data.get(label);
+                ArrayList<ArrayList<Object>> value = data.get(label);
                 for (int i = 0; i < value.size(); i++) {
-                    List<String> items = value.get(i);
+                    List<Object> items = value.get(i);
                     HSSFRow row = sheet.createRow(i);
                     for (int j = 0; j < items.size(); j++) {
-                        HSSFCell cell = row.createCell(j);
-                        if (items.get(j) != null && !items.get(j).trim().equals("")) {
-                            cell.setCellValue(items.get(j));
+                        Object val = items.get(j);
+                        if(val instanceof String ){
+                            HSSFCell cell = row.createCell(j, CellType.STRING);
+                            cell.setCellValue(val.toString());
+                        }
+                        else if(items.get(j) instanceof Double || val instanceof Integer){
+                            HSSFCell cell = row.createCell(j, CellType.NUMERIC);
+                            cell.setCellValue(NumberUtil.parseDouble(val));
                         }
                     }
                 }

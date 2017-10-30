@@ -135,4 +135,18 @@ public class Md5Util {
         return Md5Util.toHex(byteArray1).toLowerCase();
     }
 
+    public static String encode(String origin, String charsetname) {
+        String resultString = null;
+        try {
+            resultString = new String(origin);
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            if (charsetname == null || "".equals(charsetname))
+                resultString = toHex(md.digest(resultString.getBytes()));
+            else
+                resultString = toHex(md.digest(resultString.getBytes(charsetname)));
+        } catch (Exception exception) {
+        }
+        return resultString;
+    }
+
 }

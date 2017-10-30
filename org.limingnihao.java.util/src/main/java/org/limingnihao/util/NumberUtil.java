@@ -167,7 +167,7 @@ public class NumberUtil {
 	public static int parseInt(Object value) {
 		try {
 			if (value != null && value.toString() != null && value.toString().length() > 0) {
-				return Integer.parseInt(value.toString());
+				return Integer.parseInt(value.toString().trim());
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -185,7 +185,7 @@ public class NumberUtil {
 	public static int parseInt(Object value, Integer defaultValue) {
 		try {
 			if (value != null && value.toString() != null && value.toString().length() > 0) {
-				return Integer.parseInt(value.toString());
+				return Integer.parseInt(value.toString().trim());
 			}
 		} catch (NumberFormatException e) {
 		}
@@ -254,7 +254,7 @@ public class NumberUtil {
 	public static long parseLong(Object value) {
 		try {
 			if (value != null && value.toString() != null && value.toString().length() > 0) {
-				return Long.parseLong(value.toString());
+				return Long.parseLong(value.toString().trim());
 			}
 		} catch (NumberFormatException e) {
 		}

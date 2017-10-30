@@ -32,50 +32,43 @@ public class ExcelExport2007Util {
     }
 
     /**
-     * 替换文本
-     * @param workbook
-     * @param sheetIndex
-     * @param datas
+     * 导出一个excel
+     * @param filePath
+     * @param data
+     * @return
      */
-    public static void replace(XSSFWorkbook workbook, int sheetIndex, List<ExcelBean> datas){
-        //读取了模板内所有sheet内容
-        XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
-        for(ExcelBean bean : datas){
-            int row = bean.getRow();
-            int cell = bean.getCell();
-            Object value = bean.getValue();
-            XSSFRow fRow = sheet.getRow(row);
-            logger.debug("replace - row=" + row + ", cell=" + cell + ", value=" + value);
-            if(fRow == null){
-                throw new NullPointerException("此行不存在:" + row);
-            }
-            XSSFCell fCell = fRow.getCell(cell);
-            if(fCell == null){
-                throw new NullPointerException("此单元格不存在:" + row + ", " + cell);
-            }
-//            if(value instanceof Integer){
-//                fCell.setCellType(CellType.NUMERIC);
-//                fCell.setCellValue(NumberUtil.parseInt(value));
-//                logger.debug("replace - row=" + row + ", cell=" + cell + ", value=" + value + ", type=CellType.NUMERIC");
-//            } else
-            {
-                String v = "";
-                if(value != null){
-                    v = value.toString();
+    public static boolean exportExcel(final String filePath, final HashMap<String, ArrayList<ArrayList<Object>>> data){
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook();
+            for (final String label : data.keySet()) {
+                XSSFSheet sheet = workbook.createSheet(label.replaceAll("\\[|\\]|\\\\|\\:|\\?|\\/", "_"));
+                ArrayList<ArrayList<Object>> value = data.get(label);
+                for (int i = 0; i < value.size(); i++) {
+                    List<Object> items = value.get(i);
+                    XSSFRow row = sheet.createRow(i);
+                    for (int j = 0; j < items.size(); j++) {
+                        Object val = items.get(j);
+                        if(val instanceof String ){
+                            XSSFCell cell = row.createCell(j, CellType.STRING);
+                            cell.setCellValue(val.toString());
+                        }
+                        else if(val instanceof Double || val instanceof Integer){
+                            XSSFCell cell = row.createCell(j, CellType.NUMERIC);
+                            cell.setCellValue(NumberUtil.parseDouble(val));
+                        }
+                    }
                 }
-                if(v.startsWith("=")){
-                    fCell.setCellType(CellType.FORMULA);
-                    fCell.setCellFormula(v.replace("=", ""));
-                    logger.debug("replace - row=" + row + ", cell=" + cell + ", value=" + value + ", type=CellType.FORMULA");
-                }else{
-//                    fCell.setCellType(CellType.STRING);
-                    fCell.setCellValue(v);
-                    logger.debug("replace - row=" + row + ", cell=" + cell + ", value=" + value + ", type=CellType.STRING");
-                }
-
             }
+            FileOutputStream out = new FileOutputStream(filePath);
+            workbook.write(out);
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
+        return true;
     }
+
 
     /**
      * 插入行
@@ -112,11 +105,15 @@ public class ExcelExport2007Util {
             for(int j=0; j< rowList.get(i).size(); j++){
                 Object value = rowList.get(i).get(j);
                 XSSFCell fCell = targetRow.getCell(j);
-                if(value instanceof Integer){
+                if (value instanceof Integer) {
                     logger.debug("" + (startRow+1) + ", " + j + ", 数值， " + value);
                     fCell.setCellType(CellType.NUMERIC);
                     fCell.setCellValue(NumberUtil.parseInt(value));
-                } else{
+                } else if (value instanceof Double) {
+                    logger.debug("" + (startRow+1) + ", " + j + ", 数值， " + value);
+                    fCell.setCellType(CellType.NUMERIC);
+                    fCell.setCellValue(NumberUtil.parseDouble(value));
+                } else {
                     String v = "";
                     if(value != null){
                         v = value.toString();
@@ -125,7 +122,7 @@ public class ExcelExport2007Util {
                         logger.debug("" + (startRow+1) + ", " + j + ", 公式， " + value);
                         fCell.setCellType(CellType.FORMULA);
                         fCell.setCellFormula(v.replace("=", ""));
-                    }else{
+                    } else {
                         logger.debug("" + (startRow+1) + ", " + j + ", 字符， " + value);
                         fCell.setCellType(CellType.STRING);
                         fCell.setCellValue(v);
@@ -134,49 +131,71 @@ public class ExcelExport2007Util {
             }
             startRow+=1;
         }
-
         sheet.getPrintSetup().setLandscape(true);
     }
 
 
-    public static boolean exportExcel(final String filePath, final HashMap<String, ArrayList<ArrayList<String>>> data){
-        try {
-            XSSFWorkbook workbook = new XSSFWorkbook();
-            for (final String label : data.keySet()) {
-                XSSFSheet sheet = workbook.createSheet(label.replaceAll("\\[|\\]|\\\\|\\:|\\?|\\/", "_"));
-                ArrayList<ArrayList<String>> value = data.get(label);
-                for (int i = 0; i < value.size(); i++) {
-                    List<String> items = value.get(i);
-                    XSSFRow row = sheet.createRow(i);
-                    for (int j = 0; j < items.size(); j++) {
-                        XSSFCell cell = row.createCell(j);
-                        if (items.get(j) != null && !items.get(j).trim().equals("")) {
-                            cell.setCellValue(items.get(j));
-                        }
-                    }
+    /**
+     * 替换文本
+     * @param workbook
+     * @param sheetIndex
+     * @param datas
+     */
+    public static void replace(XSSFWorkbook workbook, int sheetIndex, List<ExcelBean> datas){
+        //读取了模板内所有sheet内容
+        XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
+        for(ExcelBean bean : datas){
+            int row = bean.getRow();
+            int cell = bean.getCell();
+            Object value = bean.getValue();
+            XSSFRow fRow = sheet.getRow(row);
+            logger.debug("replace - row=" + row + ", cell=" + cell + ", value=" + value);
+            if(fRow == null){
+                throw new NullPointerException("此行不存在:" + row);
+            }
+            XSSFCell fCell = fRow.getCell(cell);
+            if(fCell == null){
+                throw new NullPointerException("此单元格不存在:" + row + ", " + cell);
+            }
+
+            if(value instanceof Double || value instanceof Integer){
+                fCell.setCellType(CellType.NUMERIC);
+                fCell.setCellValue(NumberUtil.parseDouble(value));
+                logger.debug("replace - row=" + row + ", cell=" + cell + ", value=" + value + ", type=CellType.NUMERIC");
+            } else  {
+                String v = "";
+                if(value != null){
+                    v = value.toString();
+                }
+                if(v.startsWith("=")){
+                    fCell.setCellType(CellType.FORMULA);
+                    fCell.setCellFormula(v.replace("=", ""));
+                    logger.debug("replace - row=" + row + ", cell=" + cell + ", value=" + value + ", type=CellType.FORMULA");
+                }else{
+                    fCell.setCellType(CellType.STRING);
+                    fCell.setCellValue(v);
+                    logger.debug("replace - row=" + row + ", cell=" + cell + ", value=" + value + ", type=CellType.STRING");
                 }
             }
-            FileOutputStream out = new FileOutputStream(filePath);
-            workbook.write(out);
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
-        return true;
     }
 
 
-    public static void copySheet(int srcSheet,int tartSheet,  XSSFWorkbook workbook){
+    /**
+     * 复制sheet
+     * @param srcSheet
+     * @param tartSheet
+     * @param workbook
+     */
+    public static void copySheet(int srcSheet, int tartSheet, XSSFWorkbook workbook){
         Sheet sheet1 = workbook.getSheetAt(srcSheet);
-        Sheet sheet2 = workbook.createSheet("附表"+tartSheet);
+        Sheet sheet2 = workbook.createSheet("附表" + tartSheet);
         sheet2.getPrintSetup().setLandscape(true);//设置横向打印
 
         CellRangeAddress region = null;
         for (int i = 0; i < sheet1.getNumMergedRegions(); i++) {
             region = sheet1.getMergedRegion(i);
-            if ((region.getFirstColumn() >= sheet1.getFirstRowNum())
-                    && (region.getLastRow() <= sheet1.getLastRowNum())) {
+            if ((region.getFirstColumn() >= sheet1.getFirstRowNum())  && (region.getLastRow() <= sheet1.getLastRowNum())) {
                 sheet2.addMergedRegion(region);
             }
         }
@@ -207,11 +226,11 @@ public class ExcelExport2007Util {
 
                 cellTo = rowTo.createCell(j);
                 cellTo.setCellStyle(cellFrom.getCellStyle());
-                cellTo.setCellType(cellFrom.getCellType());
+                cellTo.setCellType(cellFrom.getCellTypeEnum());
 
-                if(Cell.CELL_TYPE_STRING == cellFrom.getCellType()){
+                if(CellType.STRING == cellFrom.getCellTypeEnum()){
                     cellTo.setCellValue(cellFrom.getStringCellValue());
-                }else if(Cell.CELL_TYPE_NUMERIC == cellFrom.getCellType()){
+                }else if(CellType.NUMERIC == cellFrom.getCellTypeEnum()){
                     cellTo.setCellValue(cellFrom.getNumericCellValue());
                 }
             }
