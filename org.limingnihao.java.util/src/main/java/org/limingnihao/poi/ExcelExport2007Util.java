@@ -263,8 +263,39 @@ public class ExcelExport2007Util {
 
     }
 
-
-
-
+    /**
+     * 导出一个excel
+     * @return
+     */
+    public static boolean exportExcel(OutputStream out, final HashMap<String, ArrayList<ArrayList<Object>>> data){
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook();
+            for (final String label : data.keySet()) {
+                XSSFSheet sheet = workbook.createSheet(label.replaceAll("\\[|\\]|\\\\|\\:|\\?|\\/", "_"));
+                ArrayList<ArrayList<Object>> value = data.get(label);
+                for (int i = 0; i < value.size(); i++) {
+                    List<Object> items = value.get(i);
+                    XSSFRow row = sheet.createRow(i);
+                    for (int j = 0; j < items.size(); j++) {
+                        Object val = items.get(j);
+                        if(val instanceof String ){
+                            XSSFCell cell = row.createCell(j, CellType.STRING);
+                            cell.setCellValue(val.toString());
+                        }
+                        else if(val instanceof Double || val instanceof Integer){
+                            XSSFCell cell = row.createCell(j, CellType.NUMERIC);
+                            cell.setCellValue(NumberUtil.parseDouble(val));
+                        }
+                    }
+                }
+            }
+            workbook.write(out);
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
 }
