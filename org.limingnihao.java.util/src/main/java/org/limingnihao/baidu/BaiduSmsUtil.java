@@ -1,4 +1,4 @@
-package org.limingnihao.util;
+package org.limingnihao.baidu;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -15,6 +15,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.limingnihao.model.BaiduSmsBean;
+import org.limingnihao.util.StringUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

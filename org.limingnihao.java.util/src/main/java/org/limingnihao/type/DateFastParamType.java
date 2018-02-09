@@ -3,7 +3,7 @@ package org.limingnihao.type;
 import java.io.Serializable;
 
 /**
- * 报修、投诉日期参数
+ * 日期参数
  */
 public enum DateFastParamType implements Serializable {
 

@@ -1,26 +1,31 @@
 package org.limingnihao.util;
 
-import java.security.Key;
+import org.apache.commons.codec.binary.Base64;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.binary.Base64;
+import java.security.Key;
 
 public class CryptAESUtil {
 
-    private static final String AESTYPE = "AES/ECB/PKCS5Padding";
+    public static String AESTYPE = "AES/ECB/PKCS5Padding";
 
     private static final String ALGORITHM = "AES";
 
     private static final String CHARSET_NAME = "UTF-8";
 
+    public static void main(String[] args) {
+        System.out.println(decrypt("f0d8f6c4810e9034", "lOTGVH7K4jVgVMszc/uFjYTHnMt7y3C8TXgimRWnDSw+utd2V+E9SI03BP6ZLh5K"));
+    }
+
     /**
      * 加密
+     *
      * @param keyString
      * @param plainText
      * @return
      */
-    public static String encrypt(String keyString, String plainText){
+    public static String encrypt(String keyString, String plainText) {
         byte[] encrypt = null;
         try {
             Key key = new SecretKeySpec(keyString.getBytes(CHARSET_NAME), ALGORITHM);
@@ -36,6 +41,7 @@ public class CryptAESUtil {
 
     /**
      * 解密
+     *
      * @param keyString
      * @param encryptData
      * @return
