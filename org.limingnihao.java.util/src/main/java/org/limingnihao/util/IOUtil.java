@@ -1,10 +1,11 @@
 package org.limingnihao.util;
 
+import org.apache.commons.net.util.Base64;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.codec.binary.Base64;
 
 
 /**
